@@ -1,3 +1,4 @@
+
 //import { useState } from "react";
 
 const Note = ({ note }) => <li>from Note function: {note.content}</li>;
@@ -30,6 +31,7 @@ const App = ({ notes }) => {
 					<Note note={n} />
 				))}
 			</ul>
+
 		</div>
 	);
 };
