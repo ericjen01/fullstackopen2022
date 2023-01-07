@@ -4,14 +4,14 @@
       "id": 1,
       "content": "*from db.json* HTML is easy",
       "date": "2022-1-17T17:30:31.098Z",
-      "important": false,
+      "important": true,
       "imortant": false
     },
     {
       "id": 2,
       "content": "*from db.json* Browser can execute only JavaScript",
       "date": "2022-1-17T18:39:34.091Z",
-      "important": true,
+      "important": false,
       "imortant": false
     },
     {
@@ -24,13 +24,13 @@
     {
       "content": "add new note here",
       "date": "2023-01-07T06:48:53.899Z",
-      "important": true,
+      "important": false,
       "id": 4
     },
     {
       "content": "df",
       "date": "2023-01-07T06:48:55.784Z",
-      "important": false,
+      "important": true,
       "id": 5
     },
     {
@@ -42,7 +42,7 @@
     {
       "content": "wer",
       "date": "2023-01-07T06:48:59.629Z",
-      "important": true,
+      "important": false,
       "id": 7
     }
   ]
