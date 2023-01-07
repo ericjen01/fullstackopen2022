@@ -15,6 +15,14 @@ const App = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		console.log("effect");
+		axios.get("http://localhost:3001/notes").then((response) => {
+			console.log("promise fulfilled");
+			setNotes(response.data);
+		});
+	}, []);
+
 	const addNote = (e) => {
 		e.preventDefault();
 		const noteObject = {
