@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-//import axios from "axios";
+import axios from "axios";
 import Note from "./components/Note";
 import noteService from "./services/notes";
 import Notification from "./components/Notification";
+
 
 const Footer = () => {
 	const footerStyle = {
@@ -28,6 +29,14 @@ const App = () => {
 	useEffect(() => {
 		noteService.getAll().then((initialNotes) => {
 			setNotes(initialNotes);
+		});
+	}, []);
+
+	useEffect(() => {
+		console.log("effect");
+		axios.get("http://localhost:3001/notes").then((response) => {
+			console.log("promise fulfilled");
+			setNotes(response.data);
 		});
 	}, []);
 
