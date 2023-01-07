@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
 import Note from "./components/Note";
 import noteService from "./services/notes";
 import Notification from "./components/Notification";
-
 
 const Footer = () => {
 	const footerStyle = {
@@ -18,6 +17,7 @@ const Footer = () => {
 		</div>
 	);
 };
+
 
 const App = () => {
 	const [notes, setNotes] = useState([]);
@@ -70,6 +70,8 @@ const App = () => {
 				setTimeout(() => {
 					setErrorMessage(null);
 				}, 5000);
+				//alert(`the note id ${id} was already deleted from server`);
+
 				setNotes(notes.filter((n) => n.id !== id));
 			});
 	};
