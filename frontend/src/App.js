@@ -18,7 +18,6 @@ const Footer = () => {
 	);
 };
 
-
 const App = () => {
 	const [notes, setNotes] = useState([]);
 	const [newNote, setNewNote] = useState("add new note here");
@@ -71,7 +70,6 @@ const App = () => {
 					setErrorMessage(null);
 				}, 5000);
 				//alert(`the note id ${id} was already deleted from server`);
-
 				setNotes(notes.filter((n) => n.id !== id));
 			});
 	};
