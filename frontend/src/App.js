@@ -31,6 +31,14 @@ const App = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		console.log("effect");
+		axios.get("http://localhost:3001/notes").then((response) => {
+			console.log("promise fulfilled");
+			setNotes(response.data);
+		});
+	}, []);
+
 	const addNote = (e) => {
 		e.preventDefault();
 		const noteObject = {
@@ -61,6 +69,7 @@ const App = () => {
 				setTimeout(() => {
 					setErrorMessage(null);
 				}, 5000);
+				//alert(`the note id ${id} was already deleted from server`);
 				setNotes(notes.filter((n) => n.id !== id));
 			});
 	};
