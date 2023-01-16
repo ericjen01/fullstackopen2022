@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 require("dotenv").config();
 //const { response } = require("express");
 const express = require("express");
@@ -18,10 +20,10 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(cors());
 
-const generateId = () => {
-	const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-	return maxId + 1;
-};
+//const generateId = () => {
+//	const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+//	return maxId + 1;
+//};
 
 app.get("/", (req, res) => {
 	res.send("<h1>Hello World!</h1>");
