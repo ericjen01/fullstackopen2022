@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 require("dotenv").config();
+const { response } = require("express");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -18,6 +17,11 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(requestLogger);
 app.use(cors());
+
+const generateId = () => {
+	const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+	return maxId + 1;
+};
 
 app.get("/", (req, res) => {
 	res.send("<h1>Hello World!</h1>");
@@ -49,30 +53,30 @@ app.delete("/api/notes/:id", (req, res, next) => {
 		.catch((err) => next(err));
 });
 
-app.post("/api/notes", (req, res, next) => {
+app.post("/api/notes", (req, res) => {
 	const body = req.body;
+	if (body.content === undefined) {
+		return res.status(400).json({
+			error: "content missing",
+		});
+	}
 	const note = new Note({
 		content: body.content,
 		important: body.important || false,
 		date: new Date(),
 	});
-	note
-		.save()
-		.then((savedNote) => {
-			res.json(savedNote);
-		})
-		.catch((error) => next(error));
+	note.save().then((savedNote) => {
+		res.json(savedNote);
+	});
 });
 
 app.put("/api/notes/:id", (req, res, next) => {
-	//	const body = req.body;
-	//	const note = {
-	//	content: body.content,
-	//	important: body.important,
-	//	};
-	const { content, important } = req.body;
-
-	Note.findByIdAndUpdate(req.params.id, { content, important }, { new: true, runValidators: true, context: "query" })
+	const body = req.body;
+	const note = {
+		content: body.content,
+		important: body.important,
+	};
+	Note.findByIdAndUpdate(req.params.id, note, { new: true })
 		.then((updatedNote) => {
 			res.json(updatedNote);
 		})
@@ -89,8 +93,6 @@ const errorHandler = (error, req, res, next) => {
 
 	if (error.name === "CastError") {
 		return res.status(400).sned({ error: "malformatted" });
-	} else if (error.name === "ValidationError") {
-		return res.status(400).json({ error: message });
 	}
 	next(error);
 };

@@ -24,4 +24,3 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3001/api/notes/63c514b068b3ce880e54b08a
-

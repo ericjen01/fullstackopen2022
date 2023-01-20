@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 const mongoose = require("mongoose");
 
 const url = process.env.MONGODB_URI;
@@ -16,8 +14,8 @@ mongoose
 	});
 
 const noteSchema = new mongoose.Schema({
-	content: { type: String, minLength: 5, required: true },
-	date: { type: Date, required: true },
+	content: String,
+	date: Date,
 	important: Boolean,
 });
 
