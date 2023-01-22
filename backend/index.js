@@ -1,3 +1,14 @@
+const app = require("./app"); //the actual express app
+const http = require("http");
+const config = require("./utils/config");
+const logger = require("./utils/logger");
+const server = http.createServer(app);
+
+server.listen(config.PORT, () => {
+	logger.info(`server running on port ${config.PORT}`);
+});
+
+/*
 require("dotenv").config();
 const { response } = require("express");
 const express = require("express");
@@ -18,14 +29,7 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(cors());
 
-const generateId = () => {
-	const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-	return maxId + 1;
-};
 
-app.get("/", (req, res) => {
-	res.send("<h1>Hello World!</h1>");
-});
 
 app.get("/api/notes", (req, res) => {
 	Note.find({}).then((notes) => {
@@ -102,3 +106,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
+*/
