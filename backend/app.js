@@ -1,6 +1,5 @@
-const config = require("./utils/config");
+const config = require("./util/config");
 const express = require("express");
-require("express-async-errors");
 const app = express();
 const cors = require("cors");
 const notesRouter = require("./controllers/notes");
@@ -9,7 +8,6 @@ const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 
 logger.info("connecting to", config.MONGODB_URL);
-mongoose.set("strictQuery", false);
 
 mongoose
 	.connect(config.MONGODB_URL)
