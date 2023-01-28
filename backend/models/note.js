@@ -1,15 +1,23 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 const mongoose = require("mongoose");
 
+const url = process.env.MONGODB_URI;
+
+console.log("connecting to ", url);
+
+mongoose
+	.connect(url)
+	.then((result) => {
+		console.log("connected to MongoDB");
+	})
+	.catch((err) => {
+		console.log("error connecting to MongoDB:", err.message);
+	});
+
 const noteSchema = new mongoose.Schema({
-	content: {
-		type: String,
-		required: true,
-		minlength: 5,
-	},
-	date: {
-		type: Date,
-		required: false,
-	},
+	content: { type: String, minLength: 5, required: true },
+	date: { type: Date, required: true },
 	important: Boolean,
 });
 
