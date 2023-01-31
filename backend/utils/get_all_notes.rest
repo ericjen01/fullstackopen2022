@@ -1,6 +1,8 @@
 GET http://localhost:3001/api/notes
+
 ###
 GET http://localhost:3001/api/notes/63ae1d6be544ac5de89cf4101
+
 ###
 POST http://localhost:3001/api/notes
 Content-Type: application/json
@@ -20,5 +22,28 @@ Content-Type: application/json
 }
 
 ###
-
 DELETE http://localhost:3001/api/notes/63c514b068b3ce880e54b08a
+
+###
+GET http://localhost:3001/api/users
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "user id is created",
+    "important": true,
+    "userId": "63d8f440aaf77b903601982a"
+}
+
