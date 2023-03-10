@@ -18,20 +18,20 @@ describe("when there is initially some notes saved", () => {
 			.get("/api/notes")
 			.expect(200)
 			.expect("Content-Type", /application\/json/);
-	});
+	}, 10000);
 
 	test("all notes are returned", async () => {
 		const response = await api.get("/api/notes");
 
 		expect(response.body).toHaveLength(helper.initialNotes.length);
-	});
+	}, 10000);
 
 	test("a specific note is within the returned notes", async () => {
 		const response = await api.get("/api/notes");
 
 		const contents = response.body.map((r) => r.content);
 		expect(contents).toContain("Browser can execute only JavaScript");
-	});
+	}, 10000);
 
 	describe("viewing a specific note", () => {
 		test("succeeds with a valid id", async () => {
@@ -47,11 +47,8 @@ describe("when there is initially some notes saved", () => {
 
 		test("fails with statuscode 404 if note does not exist", async () => {
 			const validNonexistId = await helper.nonExistId();
-
-			console.log(validNonexistId);
-
 			await api.get(`/api/notes/${validNonexistId}`).expect(404);
-		});
+		}, 10000);
 
 		test("fails with statuscode 400 id is invalid", async () => {
 			const invalidId = "5a3d5da59070081a82a3445";

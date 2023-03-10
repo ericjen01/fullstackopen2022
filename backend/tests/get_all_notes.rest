@@ -8,7 +8,7 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content": "Test",
+    "content": "Test hello",
     "important": false
 }
 
@@ -46,4 +46,23 @@ Content-Type: application/json
     "important": true,
     "userId": "63d8f440aaf77b903601982a"
 }
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "another note is created by this user",
+    "important": true,
+    "userId": "63d8f440aaf77b903601982a"
+}
+
+
+
+###
+GET http://localhost:3001/api/login
+
+###
+GET http://localhost:3001/api/users
+
 
