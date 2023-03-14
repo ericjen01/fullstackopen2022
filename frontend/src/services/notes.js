@@ -1,6 +1,12 @@
 import axios from "axios";
 const baseUrl = "/api/notes";
 
+let token = null;
+
+const setToken = (newToken) => {
+	token = `Bearer ${newToken}`;
+};
+
 const getAll = () => {
 	const req = axios.get(baseUrl);
 
@@ -14,9 +20,12 @@ const getAll = () => {
 	return req.then((res) => res.data.concat(dummyNote));
 };
 
-const create = (newObject) => {
-	const req = axios.post(baseUrl, newObject);
-	return req.then((res) => res.data);
+const create = async (newObject) => {
+	const config = {
+		headers: { Authorization: token },
+	};
+	const response = await axios.post(baseUrl, newObject, config);
+	return response.data;
 };
 
 const update = (id, newObject) => {
@@ -25,4 +34,4 @@ const update = (id, newObject) => {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update };
+export default { getAll, create, update, setToken };
