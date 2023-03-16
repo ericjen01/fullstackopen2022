@@ -24,14 +24,13 @@ const Footer = () => {
 
 const App = () => {
 	const [notes, setNotes] = useState([]);
-	const [newNote, setNewNote] = useState("add new note here");
+	const [newNote, setNewNote] = useState("");
 	const [showAll, setShowAll] = useState(true);
 	const [errorMessage, setErrorMessage] = useState(null);
 	const notesToShow = showAll ? notes : notes.filter((n) => n.important === true);
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState(null);
-	const [loginVisible, setLoginVisible] = useState(false);
 
 	useEffect(() => {
 		noteService.getAll().then((initialNotes) => {
@@ -48,40 +47,6 @@ const App = () => {
 		}
 		//window.localStorage.clear();
 	}, []);
-
-	const addNote = (e) => {
-		e.preventDefault();
-		const noteObject = {
-			content: newNote,
-			date: new Date(),
-			important: Math.random() > 0.5,
-		};
-		noteService.create(noteObject).then((newNoteObject) => {
-			setNotes(notes.concat(newNoteObject));
-			setNewNote("");
-		});
-	};
-
-	const handleNoteChange = (e) => {
-		setNewNote(e.target.value);
-	};
-
-	const toggleImportanceOf = (id) => {
-		const note = notes.find((n) => n.id === id);
-		const changedNote = { ...note, important: !note.important };
-		noteService
-			.update(id, changedNote)
-			.then((updatedNote) => {
-				setNotes(notes.map((n) => (n.id === id ? updatedNote : n)));
-			})
-			.catch((err) => {
-				setErrorMessage(`the note id ${id} was already deleted from server`);
-				setTimeout(() => {
-					setErrorMessage(null);
-				}, 5000);
-				setNotes(notes.filter((n) => n.id !== id));
-			});
-	};
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
@@ -102,6 +67,39 @@ const App = () => {
 				setErrorMessage(null);
 			}, 5000);
 		}
+	};
+
+	const addNote = (noteObject) => {
+		noteService.create(noteObject).then((returnedNote) => {
+			setNotes(notes.concat(returnedNote));
+		});
+	};
+
+	const noteForm = () => (
+		<Togglable buttonLabel="new note">
+			<NoteForm createNote={addNote} />
+		</Togglable>
+	);
+
+	const handleNoteChange = (e) => {
+		setNewNote(e.target.value);
+	};
+
+	const toggleImportanceOf = (id) => {
+		const note = notes.find((n) => n.id === id);
+		const changedNote = { ...note, important: !note.important };
+		noteService
+			.update(id, changedNote)
+			.then((updatedNote) => {
+				setNotes(notes.map((n) => (n.id === id ? updatedNote : n)));
+			})
+			.catch((err) => {
+				setErrorMessage(`the note id ${id} was already deleted from server`);
+				setTimeout(() => {
+					setErrorMessage(null);
+				}, 5000);
+				setNotes(notes.filter((n) => n.id !== id));
+			});
 	};
 
 	return (
