@@ -1,9 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable linebreak-style */
-/* eslint-disable semi */
-/* eslint-disable linebreak-style */
-/* eslint-disable quotes */
 import { useState, useEffect, useRef } from "react";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
@@ -78,6 +72,7 @@ const App = () => {
 			.then((returnedNote) => {
 				setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
 			})
+			// eslint-disable-next-line no-unused-vars
 			.catch((error) => {
 				setErrorMessage(`Note '${note.content}' was already removed from server`);
 				setTimeout(() => {
