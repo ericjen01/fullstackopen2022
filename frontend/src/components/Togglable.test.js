@@ -13,7 +13,6 @@ describe("<Togglable />", () => {
 				<div className="testDiv">togglable content</div>
 			</Togglable>
 		).container;
-		console.log(container);
 	});
 
 	test("renders its children", async () => {
