@@ -65,4 +65,14 @@ describe("Note app", function () {
 			});
 		});
 	});
+
+	it.only("login fails with wrong password", function () {
+		cy.contains("log in").click();
+		cy.get("#username").type("root");
+		cy.get("#password").type("wrong");
+		cy.get("#login-button").click();
+		cy.get(".error").should("contain", "wrong credentials").and("have.css", "color", "rgb(255, 0, 0)").and("have.css", "border-style", "solid");
+		cy.get("html").should("not.contain", "superuser logged in");
+		cy.contains("superuser logged in").should("not.exist");
+	});
 });
