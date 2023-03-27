@@ -14,6 +14,13 @@ describe("Note app", function () {
 
 describe("Note app", function () {
 	beforeEach(function () {
+		cy.request("POST", "http://localhost:3000/api/testing/reset");
+		const user = {
+			name: "superuser",
+			username: "root",
+			password: "salainen",
+		};
+		cy.request("POSt", "http://localhost:3001/api/users/", user);
 		cy.visit("http://localhost:3000");
 	});
 	it("front page can be opened", function () {
@@ -28,7 +35,7 @@ describe("Note app", function () {
 		cy.get("#username").type("root");
 		cy.get("#password").type("salainen");
 		cy.get("#login-button").click();
-		cy.contains("Superuser logged in");
+		cy.contains("superuser logged in");
 	});
 
 	describe("when logged in", function () {
@@ -37,13 +44,25 @@ describe("Note app", function () {
 			cy.get("#username").type("root");
 			cy.get("#password").type("salainen");
 			cy.get("#login-button").click();
-			cy.contains("Superuser logged in");
+			cy.contains("superuser logged in");
 		});
 		it("a new note can be created", function () {
 			cy.contains("new note").click();
 			cy.get("#note-input").type("a note created by cypress");
 			cy.contains("save").click();
 			cy.contains("a note created by cypress");
+		});
+
+		describe("and a note exists", function () {
+			beforeEach(function () {
+				cy.contains("new note").click();
+				cy.get("input").type("another note cypress");
+				cy.contains("save").click();
+			});
+			it("it can be made not important", function () {
+				cy.contains("another note cypress").contains("Mark Unimportant").click();
+				cy.contains("another note cypress").contains("Mark Important");
+			});
 		});
 	});
 });
