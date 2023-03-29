@@ -6,7 +6,7 @@ describe("template spec", () => {
 
 describe("Note app", function () {
 	it("front page can be opened", function () {
-		cy.visit("http://localhost:3000");
+		cy.visit("");
 		cy.contains("Notes");
 		cy.contains("Note app, Department of Computer Science, University of Helsinki 2022");
 	});
@@ -14,14 +14,14 @@ describe("Note app", function () {
 
 describe("Note app", function () {
 	beforeEach(function () {
-		cy.request("POST", "http://localhost:3000/api/testing/reset");
+		cy.request("POST", `${Cypress.env("BACKEND")}/testing/reset`);
 		const user = {
 			name: "superuser",
 			username: "root",
 			password: "salainen",
 		};
-		cy.request("POSt", "http://localhost:3001/api/users/", user);
-		cy.visit("http://localhost:3000");
+		cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
+		cy.visit("");
 	});
 	it("front page can be opened", function () {
 		cy.contains("Notes");
@@ -40,12 +40,15 @@ describe("Note app", function () {
 
 	describe("when logged in", function () {
 		beforeEach(function () {
-			cy.contains("log in").click();
-			cy.get("#username").type("root");
-			cy.get("#password").type("salainen");
-			cy.get("#login-button").click();
-			cy.contains("superuser logged in");
+			cy.request("POST", "http://localhost:3001/api/login", {
+				username: "root",
+				password: "salainen",
+			}).then((response) => {
+				localStorage.setItem("loggedNoteappUser", JSON.stringify(response.body));
+				cy.visit("");
+			});
 		});
+
 		it("a new note can be created", function () {
 			cy.contains("new note").click();
 			cy.get("#note-input").type("a note created by cypress");
@@ -55,9 +58,13 @@ describe("Note app", function () {
 
 		describe("and a note exists", function () {
 			beforeEach(function () {
-				cy.contains("new note").click();
-				cy.get("input").type("another note cypress");
-				cy.contains("save").click();
+				cy.createNote({
+					content: "another note cypress",
+					important: true,
+				});
+				//cy.contains("new note").click();
+				//cy.get("input").type("another note cypress");
+				//cy.contains("save").click();
 			});
 			it("it can be made not important", function () {
 				cy.contains("another note cypress").contains("Mark Unimportant").click();
@@ -66,7 +73,7 @@ describe("Note app", function () {
 		});
 	});
 
-	it.only("login fails with wrong password", function () {
+	it("login fails with wrong password", function () {
 		cy.contains("log in").click();
 		cy.get("#username").type("root");
 		cy.get("#password").type("wrong");
