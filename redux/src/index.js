@@ -1,7 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createStore } from "redux";
 
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+
+import App from "./App";
+import noteReducer from "./reducers/noteReducer";
+
+const store = createStore(noteReducer);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+	<Provider store={store}>
+		<App />
+	</Provider>
+);
+
+/* 6-a2:
 const counterReducer = (state = 0, action) => {
 	switch (action.type) {
 		case "INCREMENT":
@@ -34,3 +48,4 @@ const renderApp = () => {
 };
 renderApp();
 store.subscribe(renderApp);
+ */
