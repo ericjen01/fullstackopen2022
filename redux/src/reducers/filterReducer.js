@@ -14,4 +14,6 @@ export const filterChange = (filter) => {
 	};
 };
 
+//console.log(filterChange("ALL"));
+
 export default filterReducer;

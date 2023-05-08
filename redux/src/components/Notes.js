@@ -12,12 +12,20 @@ const Note = ({ note, handleClick }) => {
 
 const Notes = () => {
 	const dispatch = useDispatch();
-	//const notes = useSelector((state) => state.notes);
+
+	/*console.log("state: ",useSelector(({ filter, notes }) => ({ filter, notes })));*/
+
 	const notes = useSelector(({ filter, notes }) => {
-		if (filter === "All") {
-			return notes;
+		//console.log("components/Notes.js, filter: ", filter);
+		//console.log("components/Notes.js, notes: ", notes);
+
+		if (filter === "ALL") {
+			console.log("components/Notes, ALL selected");
+			return notes.filter((n) => n.content);
+		} else {
+			console.log("components/Notes, something else selected!");
+			return filter === "IMPORTANT" ? notes.filter((n) => n.important) : notes.filter((n) => !n.important);
 		}
-		return filter === "IMPORTANT" ? notes.filter((note) => note.important) : notes.filter((note) => !note.important);
 	});
 
 	return (
