@@ -4,7 +4,7 @@ import { toggleImportanceOf } from "../reducers/noteReducer";
 const Note = ({ note, handleClick }) => {
 	return (
 		<li onClick={handleClick}>
-			{note.content}
+			{JSON.stringify(note.content)}
 			<strong>{note.important ? "  important" : "  not important"}</strong>
 		</li>
 	);
@@ -15,16 +15,19 @@ const Notes = () => {
 
 	/*console.log("state: ",useSelector(({ filter, notes }) => ({ filter, notes })));*/
 
-	const notes = useSelector(({ filter, notes }) => {
-		//console.log("components/Notes.js, filter: ", filter);
-		//console.log("components/Notes.js, notes: ", notes);
+	const notes = useSelector((state) => {
+		console.log("components/Notes.js, filter: ", state.filter);
+		console.log("components/Notes.js, notes: ", state.notes);
 
-		if (filter === "ALL") {
+		if (state.filter === "ALL") {
 			console.log("components/Notes, ALL selected");
-			return notes.filter((n) => n.content);
+			console.log("Notes.js: ALL selected notes: ", state.notes);
+			console.log("Notes.js: ALL selected notes.content: ", state.notes.content);
+			return state.notes;
 		} else {
 			console.log("components/Notes, something else selected!");
-			return filter === "IMPORTANT" ? notes.filter((n) => n.important) : notes.filter((n) => !n.important);
+			return state.filter === "IMPORTANT" ? state.notes.filter((n) => n.important) : state.notes.filter((n) => !n.important);
+			console.log("Notes.js: important/unimportant notes: ", state.filter === "IMPORTANT" ? state.notes.filter((n) => n.important) : state.notes.filter((n) => !n.important));
 		}
 	});
 
