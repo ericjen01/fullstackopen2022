@@ -3,13 +3,13 @@
     {
       "content": "add new note here",
       "date": "2023-01-07T06:48:53.899Z",
-      "important": true,
+      "important": false,
       "id": 1
     },
     {
       "content": "add new note here",
       "date": "2023-01-07T06:48:53.899Z",
-      "important": true,
+      "important": false,
       "id": 2
     },
     {
@@ -17,11 +17,6 @@
       "date": "2023-01-07T06:48:53.899Z",
       "important": true,
       "id": 3
-    },
-    {
-      "updatedNote ": "> axios__WEBPACK_IMPORTED_MODULE_0__[\"default\"].put(`${baseUrl}/${updatedNote.id}`, updateNote).then(res => res.data)",
-      "id": 4,
-      "important": true
     }
   ]
 }

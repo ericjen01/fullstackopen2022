@@ -5,8 +5,10 @@ const App = () => {
 	const queryClient = useQueryClient();
 
 	const newNoteMutation = useMutation(createNote, {
-		onSuccess: () => {
-			queryClient.invalidateQueries("notes");
+		onSuccess: (newNote) => {
+			const notes = queryClient.getQueryData("notes");
+			console.log("const notes = queryClient.getQueryData('notes'): ", notes);
+			queryClient.setQueryData("notes", notes.concat(newNote));
 		},
 	});
 
@@ -28,6 +30,7 @@ const App = () => {
 	};
 
 	const result = useQuery("notes", getNotes);
+	//refetchOnWindowFocus: false;
 	console.log(result);
 	if (result.isLoading) {
 		return <div>loading data</div>;
