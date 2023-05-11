@@ -32,7 +32,6 @@ const App = () => {
 	if (result.isLoading) {
 		return <div>loading data</div>;
 	}
-
 	const notes = result.data;
 
 	return (
@@ -45,7 +44,7 @@ const App = () => {
 			{notes.map((note) => (
 				<li key={note.id} onClick={() => toggleImportance(note)}>
 					{JSON.stringify(note.content)}
-					<strong> {note.important ? "important" : ""}</strong>
+					<strong> {note.important ? "important" : "not important"}</strong>
 				</li>
 			))}
 		</div>
