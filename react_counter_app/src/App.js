@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import ReactDOM from "react-dom/client";
+
 import { useState } from "react";
 
 const useCounter = () => {
@@ -51,7 +51,7 @@ const App = () => {
 	const height = useField("number");
 
 	return (
-		<div>
+		<div className="container">
 			<div>{counter.value}</div>
 			<button onClick={counter.increase}>plus</button>
 			<button onClick={counter.decrease}>minus</button>
@@ -75,4 +75,6 @@ const App = () => {
 	);
 };
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+//ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+export default App;
