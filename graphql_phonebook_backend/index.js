@@ -28,7 +28,6 @@ let persons = [
 ];
 
 const typeDefs = `
-
 type Address {
 	street: String!
 	city: String! 
