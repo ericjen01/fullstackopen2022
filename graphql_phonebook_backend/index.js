@@ -2,7 +2,6 @@ const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { GraphQLError } = require("graphql");
 const { v1: uuid } = require("uuid");
-//removed
 
 let persons = [
 	{
@@ -29,6 +28,12 @@ let persons = [
 ];
 
 const typeDefs = `
+
+enum YesNo {
+	YES
+	NO
+  }
+
 type Address {
 	street: String!
 	city: String! 
@@ -43,7 +48,7 @@ type Address {
   
   type Query {
 	personCount: Int!
-	allPersons: [Person!]!
+	allPersons(phone: YesNo): [Person!]!
 	findPerson(name: String!): Person
   }
 
@@ -53,14 +58,24 @@ type Address {
 	  phone: String
 	  street: String!
 	  city: String!
-	): Person
+	): Person,
+	editNumber(
+		name: String!
+		phone: String!
+	  ): Person
   }
 `;
 
 const resolvers = {
 	Query: {
 		personCount: () => persons.length,
-		allPersons: () => persons,
+		allPersons: (root, args) => {
+			if (!args.phone) {
+				return persons;
+			}
+			const byPhone = (person) => (args.phone === "YES" ? person.phone : !person.phone);
+			return persons.filter(byPhone);
+		},
 		findPerson: (root, args) => persons.find((p) => p.name === args.name),
 	},
 	Person: {
@@ -84,6 +99,17 @@ const resolvers = {
 			const person = { ...args, id: uuid() };
 			persons = persons.concat(person);
 			return person;
+		},
+
+		editNumber: (root, args) => {
+			const person = persons.find((p) => p.name === args.name);
+			if (!person) {
+				return null;
+			}
+
+			const updatedPerson = { ...person, phone: args.phone };
+			persons = persons.map((p) => (p.name === args.name ? updatedPerson : p));
+			return updatedPerson;
 		},
 	},
 };
