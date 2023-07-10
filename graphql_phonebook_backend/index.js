@@ -1,18 +1,35 @@
+const express = require("express");
+const app = express();
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { GraphQLError } = require("graphql");
-const { v1: uuid } = require("uuid");
+//const { v1: uuid } = require("uuid");
+//import axios from "axios";
 
 const Person = require("./models/person");
 require("dotenv").config;
 const mongoose = require("mongoose");
 
+//--------------------
+//http://localhost:3001/test
+
+app.listen(3001, () => {
+  console.log("server running on 3001");
+});
+app.get("/test", (req, res) => {
+  Person.find({}).then((person) => {
+    res.json(person);
+    console.log(res.json(person));
+  });
+});
 const trial_url =
   "mongodb+srv://fullstackopen:<MY_PASSWORD>@cluster0.idyl0ve.mongodb.net/?retryWrites=true&w=majority";
 mongoose.set("strictQuery", false);
 mongoose.connect(trial_url).then(() => {
   console.log("Trial run: connected to MongoDB");
 });
+
+//----------------------------
 
 const trial_run_person = new Person({
   name: "trial_run_person",
@@ -22,7 +39,7 @@ const trial_run_person = new Person({
 });
 
 trial_run_person.save().then((testResult) => {
-  console.log("trila_run_person saved to the MongoDB database!");
+  console.log("trial_run_person saved to the MongoDB database!");
   console.log(testResult);
 });
 
@@ -103,7 +120,7 @@ const resolvers = {
       if (!args.phone) {
         return Person.find({});
       }
-      return Person.find({ phone: { $exist: args.phone === "YES" } });
+      return Person.find({ phone: { $exists: args.phone === "YES" } });
     },
 
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
