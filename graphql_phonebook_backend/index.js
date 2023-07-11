@@ -7,29 +7,8 @@ const { GraphQLError } = require("graphql");
 //import axios from "axios";
 
 const Person = require("./models/person");
-require("dotenv").config;
+require("dotenv").config();
 const mongoose = require("mongoose");
-
-//--------------------
-//http://localhost:3001/test
-
-app.listen(3001, () => {
-  console.log("server running on 3001");
-});
-app.get("/test", (req, res) => {
-  Person.find({}).then((person) => {
-    res.json(person);
-    console.log(res.json(person));
-  });
-});
-const trial_url =
-  "mongodb+srv://fullstackopen:<MY_PASSWORD>@cluster0.idyl0ve.mongodb.net/?retryWrites=true&w=majority";
-mongoose.set("strictQuery", false);
-mongoose.connect(trial_url).then(() => {
-  console.log("Trial run: connected to MongoDB");
-});
-
-//----------------------------
 
 const trial_run_person = new Person({
   name: "trial_run_person",
@@ -43,17 +22,30 @@ trial_run_person.save().then((testResult) => {
   console.log(testResult);
 });
 
-/*
-const MONGODB_URI = process.env.MONGODB_URI;
-console.log("connecting to :", MONGODB_URI);
+//http://localhost:3001/test
+//actual url with <MY_PASSWORD> stored in dotenv file ".env"
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
+});
 
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.set("strictQuery", false);
 mongoose
   .connect(MONGODB_URI)
-  .then(() => console.log("connected to MongoDB"))
-  .catch((error) => {
-    console.log("error connecting to MongoDB: ", error.message);
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log("error connecting to MongoDB: ", err.message);
   });
-  */
+
+app.get("/test", (req, res) => {
+  Person.find({}).then((person) => {
+    res.json(person);
+    console.log(res.json(person));
+  });
+});
 
 let persons = [
   {
