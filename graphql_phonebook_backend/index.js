@@ -107,7 +107,7 @@ type Address {
 
 const resolvers = {
   Query: {
-    personCount: async () => persons.collection.countDocuments(),
+    personCount: async () => Person.collection.countDocuments(),
     allPersons: (root, args) => {
       if (!args.phone) {
         return Person.find({});
