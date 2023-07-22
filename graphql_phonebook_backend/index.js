@@ -159,6 +159,7 @@ const resolvers = {
       };
     },
   },
+
   Mutation: {
     addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
@@ -212,10 +213,6 @@ const resolvers = {
       if (!isFriend(person)) {
         currentUser.friends = currentUser.friends.concat(person);
       }
-
-      await currentUser.save();
-
-      return currentUser;
     },
 
     editNumber: async (root, args) => {
@@ -273,11 +270,14 @@ startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null;
+
     if (auth && auth.startsWith("Bearer ")) {
       const decodedToken = jwt.verify(
         auth.substring(7),
         process.env.JWT_SECRET
       );
+      //Populate automatically replace specified path in document, with document(s) from other collection(s)
+      //Try clg to find difference
       const currentUser = await User.findById(decodedToken.id).populate(
         "friends"
       );
