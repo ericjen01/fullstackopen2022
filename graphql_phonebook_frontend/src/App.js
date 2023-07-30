@@ -29,6 +29,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null);
   const result = useQuery(ALL_PERSONS);
+  //console.log("*App.js result= useQuery(ALL_PERSONS): ", result);
+  //console.log("*App.js result.data: ", result.data);
   const client = useApolloClient();
 
   if (result.loading) {
@@ -69,12 +71,10 @@ const App = () => {
   return (
     <div>
       <Notify errorMessage={errorMessage} />
-      <Persons persons={result.data.allPersons} />
-      <PhoneForm />
       <button onClick={logout}>logout</button>
+      <Persons persons={result.data.allPersons} />
       <PersonForm setError={notify} />
-
-      <LoginForm />
+      <PhoneForm setError={notify} />
     </div>
   );
 };
