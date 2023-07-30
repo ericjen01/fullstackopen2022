@@ -4,8 +4,6 @@ const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { GraphQLError } = require("graphql");
 const jwt = require("jsonwebtoken");
-//const { v1: uuid } = require("uuid");
-//import axios from "axios";
 const User = require("./models/user");
 const Person = require("./models/person");
 const mongoose = require("mongoose");

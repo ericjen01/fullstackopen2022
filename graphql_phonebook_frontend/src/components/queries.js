@@ -19,6 +19,7 @@ export const FIND_PERSON = gql`
         street
         city
       }
+      id
     }
   }
 `;

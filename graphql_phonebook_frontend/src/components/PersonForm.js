@@ -45,7 +45,7 @@ const PersonForm = ({ setError }) => {
 
   return (
     <div>
-      <h2>create new</h2>
+      <h2>Create a New Person</h2>
       <form onSubmit={submit}>
         <div>
           name{" "}
