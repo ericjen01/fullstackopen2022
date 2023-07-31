@@ -108,7 +108,7 @@ me: User
 type Mutation {
   addPerson(
 	  name: String!
-	  phone: String
+	  phone: String!
 	  street: String!
 	  city: String!
   ): Person,
@@ -161,13 +161,11 @@ const resolvers = {
   Mutation: {
     addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
-
+      //console.log("**person, index.js: ", person);
       const currentUser = context.currentUser;
-      console.log("mutation-addPerson- context: ", context);
-      console.log(
-        "mutation-addPerson- context.currentUser: ",
-        context.currentUser
-      );
+      //console.log("** currentUser, index.js: ", currentUser);
+      //console.log("** mutation-addPerson- context, index.js: ", context);
+      //console.log("** mutation-addPerson- context.currentUser: ",context.currentUser);
       if (!currentUser) {
         throw new GraphQLError("not authenticated", {
           extensions: {
@@ -179,12 +177,12 @@ const resolvers = {
       try {
         await person.save();
 
-        currentUser.friends = currentUser.friens.concat(person);
+        currentUser.friends = currentUser.friends.concat(person);
         await currentUser.save();
 
         //
       } catch (error) {
-        throw new GraphQLError("saving person failed", {
+        throw new GraphQLError("Saving Person Failed: ", {
           extensions: {
             code: "BAD_USER_INPUT",
             invalidArgs: args.name,

@@ -25,17 +25,53 @@ const PersonForm = ({ setError }) => {
   const [city, setCity] = useState("");
 
   const [createPerson] = useMutation(CREATE_PERSON, {
-    refetchQueries: [{ query: ALL_PERSONS }],
+    // refetchQueries: [{ query: ALL_PERSONS }],
     onError: (err) => {
       const messages = err.graphQLErrors[0].message;
-      setError(messages);
+      let errorObject = null;
+      let errorArray = null;
+
+      if (err.graphQLErrors[0].extensions.error) {
+        errorObject = err.graphQLErrors[0].extensions.error.errors;
+        //console.log("errorObject: ", errorObject);
+        errorArray = Object.entries(errorObject); //turns the errorObject into an Array for mapping
+        //errorArray = Object.entries(errorObject).map((p) => p[1].message);
+        //console.log("errorArray: ", errorArray);
+
+        setError(() => {
+          return (
+            <div>
+              <div>{messages}</div>
+              {errorArray.map((p) => (
+                <div>{p[1].message}</div>
+              ))}
+            </div>
+          );
+        }); //setError;
+      } //if statement
+    }, //onError,
+
+    update: (cache, response) => {
+      //callback function given a reference to the cache and the data returned by mutation as parameters. in this case, this would be the created person
+      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
+        return {
+          allPersons: allPersons.concat(response.data.addPerson),
+        };
+      });
     },
   });
 
   const submit = (event) => {
     event.preventDefault();
 
-    createPerson({ variables: { name, phone, street, city } });
+    createPerson({
+      variables: {
+        name,
+        street,
+        city,
+        phone: phone.length > 0 ? phone : "phone not provided",
+      },
+    });
 
     setName("");
     setPhone("");
