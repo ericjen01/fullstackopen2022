@@ -23,7 +23,8 @@ const Person = ({ person, onClose }) => {
   return (
     <div>
       <h2>{person.name}</h2>
-      {person.address.street} {person.address.city}
+      <div>Street: {person.address.street}</div>
+      <div>City: {person.address.city}</div>
       <div>Phone: {person.phone}</div>
       <div>id: {person.id}</div>
       <button onClick={onClose}>close</button>
