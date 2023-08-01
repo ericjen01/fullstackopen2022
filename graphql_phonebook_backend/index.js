@@ -9,6 +9,7 @@ const Person = require("./models/person");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+/*
 const trial_run_person = new Person({
   name: "trial_run_person",
   street: "test_street",
@@ -20,6 +21,7 @@ trial_run_person.save().then((testResult) => {
   console.log("trial_run_person saved to the MongoDB database!");
   console.log(testResult);
 });
+*/
 
 //http://localhost:3001/test
 //actual url with <MY_PASSWORD> stored in dotenv file ".env"
