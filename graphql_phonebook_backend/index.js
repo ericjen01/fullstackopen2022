@@ -1,13 +1,23 @@
-const express = require("express");
-const app = express();
 const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
-const { GraphQLError } = require("graphql");
+const { expressMiddleware } = require("@apollo/server/express4");
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require("@apollo/server/plugin/drainHttpServer");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const express = require("express");
+const cors = require("cors");
+const http = require("http");
+
 const jwt = require("jsonwebtoken");
-const User = require("./models/user");
-const Person = require("./models/person");
+
 const mongoose = require("mongoose");
+
+const User = require("./models/user");
+
 require("dotenv").config();
+
+const typeDefs = require("./schema");
+const resolvers = require("./resolvers");
 
 /*
 const trial_run_person = new Person({
@@ -23,32 +33,14 @@ trial_run_person.save().then((testResult) => {
 });
 */
 
-//http://localhost:3001/test
-//actual url with <MY_PASSWORD> stored in dotenv file ".env"
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`server running on ${PORT}`);
-});
-
-const MONGODB_URI = process.env.MONGODB_URI;
-mongoose.set("strictQuery", false);
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((err) => {
-    console.log("error connecting to MongoDB: ", err.message);
-  });
-
-app.get("/test", (req, res) => {
+/*app.get("/test", (req, res) => {
   Person.find({}).then((person) => {
     res.json(person);
     console.log(res.json(person));
   });
-});
+});*/
 
-let persons = [
+/*let persons = [
   {
     name: "Arto Hellas",
     phone: "040-123543",
@@ -70,219 +62,69 @@ let persons = [
     city: "Helsinki",
     id: "3d599471-3436-11e9-bc57-8b80ba54c431",
   },
-];
+];*/
 
-const typeDefs = `
-enum YesNo {
-	YES
-	NO
-  }
+//http://localhost:3001/test
+//actual url with <MY_PASSWORD> stored in dotenv file ".env", refer to .env_DUMMY
+/*const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
+});*/
 
-type User{
-	username:String!
-	friends: [Person!]!
-	id: ID!
-}
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log("error connecting to MongoDB: ", err.message);
+  });
 
-type Token{
-	value: String!
-}
+const start = async () => {
+  const app = express();
+  const httpServer = http.createServer(app);
 
-type Address {
-	street: String!
-	city: String! 
-}
+  const server = new ApolloServer({
+    schema: makeExecutableSchema({ typeDefs, resolvers }),
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    //introspection: true,
+  });
+  await server.start();
+  app.use(
+    "/",
+    cors(), // resolves the issue with "blocked by CORS policy"
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        const auth = req ? req.headers.authorization : null;
+        //console.log("req: ", req);
+        //console.log("auth: ", auth);
+        if (auth && auth.startsWith("Bearer ")) {
+          const decodedToken = jwt.verify(
+            auth.substring(7),
+            process.env.JWT_SECRET
+          );
+          //Populate automatically replace specified path in document, w/ document(s) from other collection(s)
+          //Try clg to find difference
+          const currentUser = await User.findById(decodedToken.id).populate(
+            "friends"
+          );
+          return { currentUser };
+        } //if
+      }, //context
+    })
+    /*.then(({ url }) => {
+      console.log(`Server ready at ${url}`);
+    }) //then*/
+  ); //app.use
 
-type Person {
-name: String!
-phone: String!
-address: Address
-id: ID!
-}
+  const PORT = process.env.PORT;
 
-type Query {
-personCount: Int!
-allPersons(phone: YesNo): [Person!]!
-findPerson(name: String!): Person
-me: User
-}
+  httpServer.listen(PORT, () =>
+    console.log(`Server is now running on http://localhost:${PORT}`)
+  );
+}; //const start
 
-type Mutation {
-  addPerson(
-	  name: String!
-	  phone: String!
-	  street: String!
-	  city: String!
-  ): Person,
-
-  addAsFriend(
-    name: String!
-  ): User
-
-  editNumber(
-		name: String!
-		phone: String!
-  ): Person,
-	  
-  createUser(
-		username: String!
-  ): User,
-	  
-  login(
-		username: String!
-		password: String!
-  ):Token
-},
-  
-`;
-
-const resolvers = {
-  Query: {
-    personCount: async () => Person.collection.countDocuments(),
-    allPersons: async (root, args) => {
-      if (!args.phone) {
-        return Person.find({});
-      }
-      return Person.find({ phone: { $exists: args.phone === "YES" } });
-    },
-    findPerson: async (root, args) => Person.findOne({ name: args.name }),
-    me: (root, args, context) => {
-      return context.currentUser;
-    },
-  },
-
-  Person: {
-    address: ({ street, city }) => {
-      return {
-        street,
-        city,
-      };
-    },
-  },
-
-  Mutation: {
-    addPerson: async (root, args, context) => {
-      const person = new Person({ ...args });
-      //console.log("**person, index.js: ", person);
-      const currentUser = context.currentUser;
-      //console.log("** currentUser, index.js: ", currentUser);
-      //console.log("** mutation-addPerson- context, index.js: ", context);
-      //console.log("** mutation-addPerson- context.currentUser: ",context.currentUser);
-      if (!currentUser) {
-        throw new GraphQLError("not authenticated", {
-          extensions: {
-            code: "BAD_USER_INPUT",
-          },
-        });
-      }
-
-      try {
-        await person.save();
-
-        currentUser.friends = currentUser.friends.concat(person);
-        await currentUser.save();
-
-        //
-      } catch (error) {
-        throw new GraphQLError("Saving Person Failed: ", {
-          extensions: {
-            code: "BAD_USER_INPUT",
-            invalidArgs: args.name,
-            error,
-          },
-        });
-      }
-      return person;
-    },
-
-    addAsFriend: async (root, args, { currentUser }) => {
-      const isFriend = (person) =>
-        currentUser.friends
-          .map((f) => f._id.toString())
-          .includes(person._id.toString());
-
-      if (!currentUser) {
-        throw new GraphQLError("wrong credentials", {
-          extensions: { code: "BAD_USER_INPUT" },
-        });
-      }
-
-      const person = await Person.findOne({ name: args.name });
-      if (!isFriend(person)) {
-        currentUser.friends = currentUser.friends.concat(person);
-      }
-    },
-
-    editNumber: async (root, args) => {
-      const person = await Person.findOne({ name: args.name });
-      person.phone = args.phone;
-      try {
-        await person.save();
-      } catch (error) {
-        throw new GraphQLError("editing number failed", {
-          extensions: {
-            code: "BAS_USER_INPUT",
-            invalidArgs: args.name,
-            error,
-          },
-        });
-      }
-      return person;
-    },
-
-    createUser: async (root, args) => {
-      const user = new User({ username: args.username });
-      return user.save().catch((error) => {
-        throw new GraphQLError("User Creation Failed", {
-          extensions: { code: "BAD_USER_INPUT", invalidArgs: args.name, error },
-        });
-      });
-    },
-
-    login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
-
-      if (!user || args.password !== "secret") {
-        throw new GraphQLError("wrong credentials", {
-          extensions: { code: "BAD_USER_NAME" },
-        });
-      }
-
-      const userForToken = {
-        username: user.username,
-        id: user._id,
-      };
-
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
-    },
-  },
-};
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true,
-});
-
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req, res }) => {
-    const auth = req ? req.headers.authorization : null;
-    //console.log("req: ", req);
-    //console.log("auth: ", auth);
-    if (auth && auth.startsWith("Bearer ")) {
-      const decodedToken = jwt.verify(
-        auth.substring(7),
-        process.env.JWT_SECRET
-      );
-      //Populate automatically replace specified path in document, with document(s) from other collection(s)
-      //Try clg to find difference
-      const currentUser = await User.findById(decodedToken.id).populate(
-        "friends"
-      );
-      return { currentUser };
-    }
-  },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+start();

@@ -53,6 +53,7 @@ const PersonForm = ({ setError }) => {
 
     update: (cache, response) => {
       //callback function given a reference to the cache and the data returned by mutation as parameters. in this case, this would be the created person
+      //updateQuery updates the query ALL_PERSONS in cache by adding the new person to the cached data.
       cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
         return {
           allPersons: allPersons.concat(response.data.addPerson),
