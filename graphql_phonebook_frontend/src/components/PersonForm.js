@@ -42,8 +42,8 @@ const PersonForm = ({ setError }) => {
           return (
             <div>
               <div>{messages}</div>
-              {errorArray.map((p) => (
-                <div>{p[1].message}</div>
+              {errorArray.map((p, index) => (
+                <div key={index}>{p[1].message}</div>
               ))}
             </div>
           );

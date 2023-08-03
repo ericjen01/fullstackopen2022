@@ -4,14 +4,19 @@ const {
   ApolloServerPluginDrainHttpServer,
 } = require("@apollo/server/plugin/drainHttpServer");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
+
+const { WebSocketServer } = require("ws");
+const { useServer } = require("graphql-ws/lib/use/ws");
+
 const express = require("express");
 const cors = require("cors");
+//const bodyParser = require("body-parser");
 const http = require("http");
 
 const jwt = require("jsonwebtoken");
-
 const mongoose = require("mongoose");
-
+mongoose.set("strictQuery", false);
+//const Person = require("./models/person");
 const User = require("./models/user");
 
 require("dotenv").config();
@@ -85,19 +90,44 @@ mongoose
 const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
+  // console.log("* httpServer: ", httpServer);
+
+  //webstockserver object to listen the webstock connections, beside the usual http connections.
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/",
+  });
+  //console.log("* wsServer: ", wsServer);
+  //When queries and mutations are used, GraphQL uses the HTTP protocol in the communication. In case of subscriptions, the communication between client and server happens with WebSockets
+
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  // console.log("* schema: ", schema);
+  const serverCleanup = useServer({ schema }, wsServer);
 
   const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    //introspection: true,
-  });
+    schema,
+    //definition registers a function that closes the WebSocket connection on server shutdown.
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+  }); //server
   await server.start();
+
   app.use(
     "/",
     cors(), // resolves the issue with "blocked by CORS policy"
     express.json(),
     expressMiddleware(server, {
-      context: async ({ req, res }) => {
+      context: async ({ req }) => {
         const auth = req ? req.headers.authorization : null;
         //console.log("req: ", req);
         //console.log("auth: ", auth);
