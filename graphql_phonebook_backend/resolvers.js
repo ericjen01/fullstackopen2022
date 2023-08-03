@@ -1,15 +1,19 @@
-const Person = require("./models/person");
 const { GraphQLError } = require("graphql");
-const User = require("./models/user");
 const jwt = require("jsonwebtoken");
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
+
+const User = require("./models/user");
+const Person = require("./models/person");
 
 const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
-    allPersons: async (root, args) => {
+    allPersons: async (root, args, context) => {
       if (!args.phone) {
         return Person.find({});
       }
+
       return Person.find({ phone: { $exists: args.phone === "YES" } });
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
@@ -17,7 +21,6 @@ const resolvers = {
       return context.currentUser;
     },
   },
-
   Person: {
     address: ({ street, city }) => {
       return {
@@ -45,10 +48,8 @@ const resolvers = {
 
       try {
         await person.save();
-
         currentUser.friends = currentUser.friends.concat(person);
         await currentUser.save();
-
         //
       } catch (error) {
         throw new GraphQLError("Saving Person Failed: ", {
@@ -59,6 +60,8 @@ const resolvers = {
           },
         });
       }
+      pubsub.publish("PERSON_ADDED", { personAdded: person });
+
       return person;
     },
 
@@ -123,6 +126,15 @@ const resolvers = {
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     }, //login
   }, //Mutation
+
+  //resolver of the personAdded subscription registers and saves info about all the clients that do the subscription. The clients are saved to an "iterator object" PERSON_ADDED. Adding a new person publishes a notification to all subscribers with PubSub's method publish
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterator("PERSON_ADDED"),
+    },
+  },
+
+  //
 }; //resolvers
 
 module.exports = resolvers;
