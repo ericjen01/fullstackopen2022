@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ALL_PERSONS, CREATE_PERSON } from "./queries";
+import { updateCache } from "../App";
 
 /*
 const CREATE_PERSON = gql`
@@ -51,7 +52,7 @@ const PersonForm = ({ setError }) => {
       } //if statement
     }, //onError,
 
-    update: (cache, response) => {
+    /*update: (cache, response) => {
       //callback function given a reference to the cache and the data returned by mutation as parameters. in this case, this would be the created person
       //updateQuery updates the query ALL_PERSONS in cache by adding the new person to the cached data.
       cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
@@ -59,6 +60,10 @@ const PersonForm = ({ setError }) => {
           allPersons: allPersons.concat(response.data.addPerson),
         };
       });
+    },*/
+
+    update: (cache, response) => {
+      updateCache(cache, { query: ALL_PERSONS }, response.data.addPerson);
     },
   });
 
