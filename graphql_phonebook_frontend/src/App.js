@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery, useSubscription } from "@apollo/client";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import PhoneForm from "./components/PhoneForm";
-import { ALL_PERSONS } from "./components/queries";
+import { ALL_PERSONS, PERSON_ADDED } from "./components/queries";
 import LoginForm from "./components/LoginForm";
 
 /*
@@ -25,6 +25,22 @@ const Notify = ({ errorMessage }) => {
   return <div style={{ color: "red" }}>{errorMessage}</div>;
 };
 
+export const updateCache = (cache, query, addedPerson) => {
+  const uniqByName = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      let k = item.name;
+      return seen.has(k) ? false : seen.add(k);
+    });
+  };
+
+  cache.updateQuery(query, ({ allPersons }) => {
+    return {
+      allPersons: uniqByName(allPersons.concat(addedPerson)),
+    };
+  });
+};
+
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null);
@@ -33,15 +49,25 @@ const App = () => {
   //console.log("*App.js result.data: ", result.data);
   const client = useApolloClient();
 
+  useSubscription(PERSON_ADDED, {
+    onData: ({ data }) => {
+      // console.log(data);
+      const addedPerson = data.data.personAdded;
+      notify(`user "${addedPerson.name}" added`);
+      updateCache(client.cache, { query: ALL_PERSONS }, addedPerson);
+
+      /* client.cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
+        return {
+          allPersons: allPersons.concat(addedPerson),
+          xx,
+        };
+      });*/
+    }, //onData
+  }); //useSubscription
+
   if (result.loading) {
     return <div>loading........</div>;
   }
-
-  const logout = () => {
-    setToken(null);
-    localStorage.clear();
-    client.resetStore();
-  };
 
   const notify = (message) => {
     setErrorMessage(message);
@@ -67,6 +93,12 @@ const App = () => {
       </>
     );
   }
+
+  const logout = () => {
+    setToken(null);
+    localStorage.clear();
+    client.resetStore();
+  };
 
   return (
     <div>
