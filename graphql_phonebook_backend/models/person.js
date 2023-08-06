@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 2,
   },
   street: {
     type: String,
@@ -19,8 +19,14 @@ const schema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 2,
   },
+  friendOf: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Person", schema);
