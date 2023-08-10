@@ -1,0 +1,17 @@
+//tsconfig.json is used to define how TypeScript compiler should interpret the code, how strictly the compiler should work, which files to watch or ignore, etc. 
+//the compiler option noImplicitAny does not require having types for all variables used
+
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  }
+    
+  }
