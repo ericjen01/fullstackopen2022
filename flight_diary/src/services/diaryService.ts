@@ -1,5 +1,5 @@
 import diaries from "../../data/entries"
-import { DiaryEntry, NonSensitiveDiaryEntry } from "../types"
+import { DiaryEntry, NonSensitiveDiaryEntry, NewDiaryEntry } from "../types"
 
 const getEntries = (): DiaryEntry[]=>{
     return diaries
@@ -7,6 +7,8 @@ const getEntries = (): DiaryEntry[]=>{
 
 const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[]=>{ //refer to material 9C, Utility Types:
     // TypeScript only checks whether we have all of the required fields or not, but excess fields are not prohibited. Because TypeScript doesn't modify the actual data but only its type, we need to exclude the fields ourselves (9C, utility types):
+   // console.log("* diaries.map.id: ", diaries.map(d=>d.id))
+    //console.log("* （...diaries.map.id): ", ...diaries.map(d=>d.id))
     return diaries.map(({id, date, weather, visibility})=>({
         id,
         date,
@@ -15,14 +17,27 @@ const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[]=>{ //refer to materi
     }))
 }
 
-const addDiary =()=>{
-    return null
+const addDiary =( entry:NewDiaryEntry): DiaryEntry=>{
+    const newDiaryEntry ={
+        //map(d=>d.id) returns an array of dairies ids, three dot notation (spread/rest operator)"..." turns the array 
+        id: Math.max(...diaries.map(d=>d.id)) +1,
+       ...entry
+    }
+
+    diaries.push(newDiaryEntry)
+    return newDiaryEntry
+}
+
+const findById =(id:number):DiaryEntry|undefined =>{
+    const entry = diaries.find(d=>d.id===id)
+    return entry
 }
 
 export default {
     getEntries,
 addDiary,
-getNonSensitiveEntries
+getNonSensitiveEntries,
+findById
 }
 
 

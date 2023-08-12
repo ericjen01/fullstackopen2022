@@ -13,7 +13,7 @@ export interface DiaryEntry{
 
 //refer to material 9C, Utility Types:
 // Omit utility type is used to declare which fields to exclude
-export type NewDiaryEntry = Omit<DiaryEntry, 'id'>
+export type NewDiaryEntry = Omit<DiaryEntry, 'id'> //include all except for id
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, 'comment'>
 
 
