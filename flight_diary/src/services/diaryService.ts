@@ -17,12 +17,11 @@ const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[]=>{ //refer to materi
     }))
 }
 
-const addDiary =( entry:NewDiaryEntry): DiaryEntry=>{
-    const newDiaryEntry ={
-        //map(d=>d.id) returns an array of dairies ids, three dot notation (spread/rest operator)"..." turns the array 
-        id: Math.max(...diaries.map(d=>d.id)) +1,
-       ...entry
-    }
+const addDiary = ( entry: NewDiaryEntry ): DiaryEntry => {
+    const newDiaryEntry = {
+      id: Math.max(...diaries.map(d => d.id)) + 1,
+      ...entry
+    };
 
     diaries.push(newDiaryEntry)
     return newDiaryEntry
