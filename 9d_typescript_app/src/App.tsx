@@ -1,23 +1,21 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import {Note} from "./services/types"
+import { createNote, getAllNotes } from './services/noteService';
 
 const App = () => {
 
-  interface Note{
-    id:number;
-    content: string; 
-    }
     //use a type parameter in situations where the compiler can not infer the type.
   const [newNote, setNewNote] = useState('');
   const [notes, setNotes] = useState<Note[]>([{id:1, content:'testing'}]);
 
+  useEffect(()=>{getAllNotes().then(data=> setNotes(data))},[])
+
+
 const noteCreation =(e:React.SyntheticEvent)=>{
   e.preventDefault()
-  const noteToAdd={
-    content: newNote,
-    id:notes.length+1
-  }
-  setNotes(notes.concat(noteToAdd))
+  createNote({content:newNote}).then(data=>{setNotes(notes.concat(data))})
+
   setNewNote("")
 }
 
