@@ -1,19 +1,23 @@
 import express from "express";
-const app = express()
-const cors = require('cors')
+import diagnosesRouter from "./routes/diagnoses";
+import allEntries from "./data/diagnosesEntries";
+//import diagnosesService from "./services/diagnosesService";
 
-app.use(cors())
-app.use(express.json()) //json = middleware function in express which parses reqs with json payloads
 
-const PORT = 3001  
+const app = express();
+const PORT = 3001;
+app.use(express.json());
 
-app.get("/api/ping",(req,res)=>{
-     res.send('<h3>test</h3>')
-     console.log(req.body)
-})
-app.get("/api/patients",(_req,res)=>{
-     res.send('<h3>test</h3>')
-})
+app.get("/test", (_req, res) => {
+  console.log("someone pinged here");
+  res.send("pong");
+});
+app.use("/api/diagnoses", diagnosesRouter);
 
-app.listen(PORT,()=>{console.log(`server running on ${PORT}`)})
+console.log(allEntries);
+//console.log(diagnosesService.getAllEntries());
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
