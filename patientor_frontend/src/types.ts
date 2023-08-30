@@ -1,4 +1,4 @@
-export interface Diagosis{
+export interface Diagnosis{
     code: string;
     name:string;
     latin?:string;
@@ -19,4 +19,6 @@ export interface Patient {
     dateOfBirth?: string;
   }
 
-  export type PatientFormValues = Omit<Patient, "id"|"entries">
+
+export type PatientFormValues = Omit<Patient, "id"|"entries">
+export type nonLatinEntryType = Omit<Diagnosis, 'latin'>;

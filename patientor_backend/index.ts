@@ -1,20 +1,24 @@
 import express from "express";
 import diagnosesRouter from "./routes/diagnoses";
-import allEntries from "./data/diagnosesEntries";
+import patientsRouter from './routes/patients';
+//import allEntries from "./data/diagnosesEntries";
 //import diagnosesService from "./services/diagnosesService";
 
-
 const app = express();
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+const cors = require('cors');
 const PORT = 3001;
 app.use(express.json());
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+app.use(cors());
 
-app.get("/test", (_req, res) => {
-  console.log("someone pinged here");
-  res.send("pong");
+app.get("/api", () => {
+ // console.log("connected to backend /api directory");
 });
-app.use("/api/diagnoses", diagnosesRouter);
+app.use("/api/diagnoses", diagnosesRouter); 
+app.use('/api/patients', patientsRouter);
 
-console.log(allEntries);
+//console.log(allEntries);
 //console.log(diagnosesService.getAllEntries());
 
 app.listen(PORT, () => {
