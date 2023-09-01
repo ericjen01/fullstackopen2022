@@ -8,15 +8,15 @@ interface Props {
 
 const DiagnosisListPage = (diagnoses:Props) =>{
 
+  /*  console.log(typeof diagnoses)
+  console.log( diagnoses.diagnoses)
+  diagnoses.diagnoses.map(p=>console.log(p.code))*/
+
     return (
         <div className="App">
             <Box>
                 <Typography align="center" variant="h6">Patient list</Typography>
             </Box>
-
-            <div>
-            {Object.values(diagnoses).map( (diag: Diagnosis, i) => <p key={i}>{JSON.stringify(diag)}</p>)}
-            </div>
             
             <Table style={{ marginBottom: "1em" }}>
                 <TableHead> 
@@ -27,11 +27,11 @@ const DiagnosisListPage = (diagnoses:Props) =>{
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {Object.values(diagnoses).map((diag:Diagnosis,i) => (
+                {Object.values(diagnoses.diagnoses).map((diag:Diagnosis,i) => (
                     <TableRow key={i}>
-                    <TableCell>som {diag.code.toString()}</TableCell>
-                    <TableCell>some {diag.name}</TableCell>
-                    <TableCell>some {diag.latin}</TableCell>
+                    <TableCell>{diag.code}</TableCell>
+                    <TableCell>{diag.name}</TableCell>
+                    <TableCell>{diag.latin}</TableCell>
                     </TableRow>
                 ))}
                 </TableBody>

@@ -15,6 +15,7 @@ interface Props {
 }
 
 const PatientListPage = ({ patients, setPatients } : Props ) => {
+  //console.log("patients")
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
