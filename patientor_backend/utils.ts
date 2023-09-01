@@ -1,4 +1,4 @@
-import {allEntryType,nonLatinEntryType,PatientEntry,Gender} from "./types";
+import {allEntryType,nonLatinEntryType,Gender, NewPatientEntry} from "./types";
 
 const isString = (text:unknown):text is string=>{
     return typeof text==='string'|| text instanceof String;
@@ -48,24 +48,26 @@ export const toNewDiagnosesEntry =(obj:unknown)/*:allEntryType*/=>{
 };
 
 
-export const toNewPatientEntry= (obj:unknown):PatientEntry=>{
+export const toNewPatientEntry /*with id*/= (obj:unknown):NewPatientEntry /*with id*/=>{
     //type guard 1:
     if(!obj || typeof obj !=='object'){
         throw new Error ('incomplete or missing data');
     }
     //type guard 2:
-    if ('id'in obj && 'name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
-        const newEntry: PatientEntry={
-            id: parseStringObject(obj.id),
+    if (/*'id'in obj && */'name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
+        const newEntry: NewPatientEntry /*no id*/={
+            /*id?: parseStringObject(obj.id),*/
             name: parseStringObject(obj.name),
             dateOfBirth: parseStringObject(obj.dateOfBirth),
             ssn: parseStringObject(obj.ssn),
             gender: parseGender(obj.gender),
             occupation: parseStringObject(obj.occupation)
+            
         };
+        //console.log("*** backend>utils>newEntry: ", newEntry);
         return newEntry;
     }
-    throw new Error('Incorrect data: some fields are missing');
+    throw new Error('patientor>backend>util: Incorrect data: some fields are missing');
 };
 
 export default {};
