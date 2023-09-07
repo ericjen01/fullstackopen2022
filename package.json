@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^10.0.0",
+    "@mui/icons-material": "^5.14.7",
     "graphql-subscriptions": "^2.0.0",
     "graphql-ws": "^5.14.0",
     "uuid": "^9.0.0",

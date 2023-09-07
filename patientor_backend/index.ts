@@ -1,8 +1,6 @@
 import express from "express";
 import diagnosesRouter from "./routes/diagnoses";
 import patientsRouter from './routes/patients';
-//import allEntries from "./data/diagnosesEntries";
-//import diagnosesService from "./services/diagnosesService";
 
 const app = express();
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
@@ -12,14 +10,9 @@ app.use(express.json());
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(cors());
 
-app.get("/api", () => {
- // console.log("connected to backend /api directory");
-});
+app.get("/api", () => {});
 app.use("/api/diagnoses", diagnosesRouter); 
 app.use('/api/patients', patientsRouter);
-
-//console.log(allEntries);
-//console.log(diagnosesService.getAllEntries());
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

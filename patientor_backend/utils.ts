@@ -1,4 +1,4 @@
-import {allEntryType,nonLatinEntryType,Gender, NewPatientEntry} from "./types";
+import {allEntryType,nonLatinEntryType,Gender, NewPatientEntry, Patient} from "./types";
 
 const isString = (text:unknown):text is string=>{
     return typeof text==='string'|| text instanceof String;
@@ -20,7 +20,6 @@ const parseGender = (gender: unknown): Gender => {
     }
     return gender;
   };
-
 
 export const toNewDiagnosesEntry =(obj:unknown)/*:allEntryType*/=>{
       //typeguard 1: checks if the parameter object exists and it has the type object
@@ -47,16 +46,32 @@ export const toNewDiagnosesEntry =(obj:unknown)/*:allEntryType*/=>{
 
 };
 
+export const toFullPatientEntry = (obj:unknown): Patient =>{
+    if (!obj||typeof obj !=='object')  throw new Error ('entry does not exists or is not an object');
+    
+    if('id'in obj && 'name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj && 'entries'in obj){
+        const patient : Patient = {
+            id: parseStringObject(obj.id),
+            name: parseStringObject(obj.name),
+            dateOfBirth: parseStringObject(obj.dateOfBirth),
+            ssn: parseStringObject(obj.ssn),
+            gender: parseGender(obj.gender),
+            occupation: parseStringObject(obj.occupation),
+            entries:[]
+        };
+        return patient;
+    }  throw new Error('patientor>backend>util>toFullPatientEntry: Incorrect data: some fields are missing');
 
-export const toNewPatientEntry /*with id*/= (obj:unknown):NewPatientEntry /*with id*/=>{
+};
+
+export const toNewPatientEntry = (obj:unknown):NewPatientEntry =>{
     //type guard 1:
     if(!obj || typeof obj !=='object'){
         throw new Error ('incomplete or missing data');
     }
     //type guard 2:
-    if (/*'id'in obj && */'name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
-        const newEntry: NewPatientEntry /*no id*/={
-            /*id?: parseStringObject(obj.id),*/
+    if ('name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
+        const newEntry: NewPatientEntry ={
             name: parseStringObject(obj.name),
             dateOfBirth: parseStringObject(obj.dateOfBirth),
             ssn: parseStringObject(obj.ssn),
@@ -64,10 +79,9 @@ export const toNewPatientEntry /*with id*/= (obj:unknown):NewPatientEntry /*with
             occupation: parseStringObject(obj.occupation)
             
         };
-        //console.log("*** backend>utils>newEntry: ", newEntry);
         return newEntry;
     }
-    throw new Error('patientor>backend>util: Incorrect data: some fields are missing');
+    throw new Error('patientor>backend>util>toNewPatientEntry: Incorrect data: some fields are missing');
 };
 
 export default {};
