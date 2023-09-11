@@ -1,18 +1,21 @@
 import express from 'express';
 import patientService from "../services/patientsService";
 //import {PatientEntry/*, NoSsnPatientEntry, Gender*/} from "../types";
+//import { useParams } from 'react-router-dom';
 import { toNewPatientEntry } from '../utils';
 
 const router = express.Router();
 
 //3001/api/patients/ + ""
 router.get('/', (_req,res)=>{
-    res.send(JSON.stringify(patientService.allEntries()))  ;
+    res.send(JSON.stringify(patientService.allPatients()))  ;
 });
 
-/*router.get('/:id', (_req,res)=>{
-    res.send(JSON.stringify(patientService.patientById()));
-});*/
+router.get('/:id', (req,res)=>{
+    const reqstedId = req.params.id;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    res.send(JSON.stringify(patientService.patientById(reqstedId)));
+});
 
 router.post("/",(req,res)=>{
 try{

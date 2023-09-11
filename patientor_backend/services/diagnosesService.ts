@@ -1,13 +1,13 @@
-import {allEntries, nonLatinEntries} from "../data/diagnosesEntries";
-import { allEntryType, nonLatinEntryType } from "../types";
+import {allDiagonses, nonLatinEntries} from "../data/diagnosesEntries";
+import { Diagnosis, nonLatinEntryType } from "../types";
 
-const getAllEntries = (): allEntryType[]=>{
+const getAllDiagnoses = (): Diagnosis[]=>{
     //console.log("test", diagnosesEntries);
-    return allEntries;
+    return allDiagonses;
 };
 
 const getNonLatinEntries = ():nonLatinEntryType[]=>{
     return nonLatinEntries.map(({code, name})=>({code, name}));
 };
 
-export default {getAllEntries, getNonLatinEntries};
+export default {getAllDiagnoses, getNonLatinEntries};

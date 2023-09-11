@@ -12,13 +12,10 @@ import PatientListPage from "./components/PatienListPage";
 import diagnoseseService from "./services/diagnoses"
 import DiagnosisListPage from "./components/DiagnosesListPage"
 
-//import patientInfoService from "./services/patientInfo";
 import PatientInfoPage from "./components/PatientInfoPage";
 
 const App =()=>{
-  //we use a Type Variable "<Patient[]>" which allows us to capture the type users provide that we can use that info later
-  //https://www.typescriptlang.org/docs/handbook/generics.html
-  //const [patientInfo, setPatientInfo] = useState<Patient>(Object)
+  
   const [patients, setPatients] = useState<Patient[]>([])
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
 
@@ -38,14 +35,7 @@ const App =()=>{
     }
     fetchDiagnoseList()
 
-   /* const fetchPatientInfo = async ()=>{
-      const patientInfo = await patientInfoService()
-      setPatientInfo(patientInfo)
-      console.log("frontend>App>patientInfo: ", patientInfo)
-    }
-    fetchPatientInfo()
-    */
-
+    
   }, []);
  
   return(
