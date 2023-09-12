@@ -51,7 +51,7 @@ const App =()=>{
         <Routes>
           <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
           <Route path="/diagnoses/all" element={<DiagnosisListPage diagnoses={diagnoses}/>}/>
-          <Route path="/patients/:id" element={<PatientInfoPage patients={patients} setPatients={setPatients}/>} />
+          <Route path="/patients/:id" element={<PatientInfoPage patients={patients} setPatients={setPatients} diagnoses={diagnoses}/>} />
 
         </Routes>
       </Container>
