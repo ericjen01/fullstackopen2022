@@ -1,4 +1,4 @@
-import {allEntryType, nonLatinEntryType} from "../types";
+import {Diagnosis, nonLatinEntryType} from "../types";
 import {toNewDiagnosesEntry} from "../utils";
 
 
@@ -80,8 +80,8 @@ const data = [
   },
 ];
 
-export const allEntries: allEntryType[] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj) as allEntryType;
+export const allDiagonses: Diagnosis[] = data.map(obj=>{
+  const object = toNewDiagnosesEntry(obj) as Diagnosis;
   return object;
 });
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 import axios from 'axios';
-
+import { useNavigate,  } from "react-router-dom";
 import { PatientFormValues, Patient } from "../../types";
 import AddPatientModal from "../AddPatientModal";
-
 import HealthRatingBar from "../HealthRatingBar";
-
 import patientService from "../../services/patients";
+
+
 
 interface Props {
   patients : Patient[]
@@ -46,7 +46,15 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         setError("Unknown error");
       }
     }
+  
   };
+
+  const navigate = useNavigate();
+  const routeToPatient = (patientId:string) =>{
+  const path = `patients/${patientId}`;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  navigate(path);
+ }
 
   return (
     <div className="App">
@@ -65,11 +73,11 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.values(patients).map((patient: Patient) => (
-            <TableRow key={patient.id}>
-              <TableCell>{patient.name}</TableCell>
-              <TableCell>{patient.gender}</TableCell>
-              <TableCell>{patient.occupation}</TableCell>
+          {Object.values(patients).map((p: Patient) => (
+            <TableRow key={p.id}>
+              <TableCell style={{cursor:'pointer'}} onClick={()=>routeToPatient(p.id)}>{p.name}</TableCell>
+              <TableCell>{p.gender}</TableCell>
+              <TableCell>{p.occupation}</TableCell>
               <TableCell>
                 <HealthRatingBar showText={false} rating={1} />
               </TableCell>
@@ -86,6 +94,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
       <Button variant="contained" onClick={() => openModal()}>
         Add New Patient
       </Button>
+    
     </div>
   );
 };

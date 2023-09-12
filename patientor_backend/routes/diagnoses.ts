@@ -13,7 +13,7 @@ router.get("/simple",(_req,res)=>{
 router.get("/all", (_req,res)=>{
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
      // use JSON.stringify or OBject.values to get the rid of the error "The first argument must be of type string "
-    res.send(JSON.stringify(diagnosesService.getAllEntries()));
+    res.send(JSON.stringify(diagnosesService.getAllDiagnoses()));
 });
 
 export default router;

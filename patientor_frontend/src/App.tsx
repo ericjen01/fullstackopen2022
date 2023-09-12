@@ -1,6 +1,6 @@
 import{useState, useEffect} from 'react'
 import axios from 'axios'
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import {  BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { Button, Divider, Container, Typography } from '@mui/material';
 
 import {apiBaseUrl } from './constants'
@@ -12,9 +12,10 @@ import PatientListPage from "./components/PatienListPage";
 import diagnoseseService from "./services/diagnoses"
 import DiagnosisListPage from "./components/DiagnosesListPage"
 
+import PatientInfoPage from "./components/PatientInfoPage";
+
 const App =()=>{
-  //we use a Type Variable "<Patient[]>" which allows us to capture the type users provide that we can use that info later
-  //https://www.typescriptlang.org/docs/handbook/generics.html
+  
   const [patients, setPatients] = useState<Patient[]>([])
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
 
@@ -25,15 +26,15 @@ const App =()=>{
       const patients = await patientService.getAll();
       setPatients(patients);
     };
-     fetchPatientList();
+    fetchPatientList();
 
     const fetchDiagnoseList= async () =>{
       //localhost:3001/api/diagnoses/all under 'diagnoseseService.allEntries()'
       const diagnoses= await diagnoseseService.allEntries() 
       setDiagnoses(diagnoses)
     }
-      fetchDiagnoseList()
-
+    fetchDiagnoseList()
+    
   }, []);
  
   return(
@@ -45,11 +46,13 @@ const App =()=>{
         </Typography>
         <Button component={Link} to="/" variant="contained" color="primary">
           Home
-        </Button>
+        </Button> 
         <Divider hidden />
         <Routes>
           <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
           <Route path="/diagnoses/all" element={<DiagnosisListPage diagnoses={diagnoses}/>}/>
+          <Route path="/patients/:id" element={<PatientInfoPage patients={patients} setPatients={setPatients}/>} />
+
         </Routes>
       </Container>
     </Router>
@@ -59,3 +62,7 @@ const App =()=>{
 }
 
 export default App;
+
+
+/*          <Route path="/patients/:id" element={<PatientInfoPage patientInfo={patientInfo} setPatientInfo={setPatientInfo}/>} />
+*/
