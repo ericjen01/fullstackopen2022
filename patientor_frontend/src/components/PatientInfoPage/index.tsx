@@ -1,4 +1,4 @@
-import { Entry, Patient, } from "../../types";
+import { Diagnosis, Entry, Patient, } from "../../types";
 import{useState, useEffect} from 'react'
 import { useParams } from "react-router-dom";
 import MaleIcon from '@mui/icons-material/Male';
@@ -9,10 +9,11 @@ import patientInfoService from "../../services/patientInfo"
 
 interface Props {
     patients : Patient[]
+    diagnoses: Diagnosis[]
     setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
   }
 
-const PatientInfoPage = ({ patients, setPatients }: Props) => {
+const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
     const [patientInfo, setPatientInfo] = useState<Patient>(Object)
     const params = useParams() //returns "{id: 'xxx-xxx-...'}"
     const patientId = params.id; //returns id in string form
@@ -25,7 +26,14 @@ const PatientInfoPage = ({ patients, setPatients }: Props) => {
         fetchPatientInfo()
     }, [patientId]);
     
-    const patientEntry = ()=>{
+    const addDiagnosisDescription =(code:string)=>{
+        const match = (diagnoses.filter(d=>d.code === code))[0]?.name
+        return match
+    }
+   
+
+    const patientEntry =()=>{
+        console.log((diagnoses.filter(d=>d.code === "Z57.1"))[0]?.name)
         if(patientInfo.entries?.length ){
             return (
             <div>
@@ -34,7 +42,9 @@ const PatientInfoPage = ({ patients, setPatients }: Props) => {
                     <div key={e.id}>
                         <span>{e.date} {e.description}</span> 
                         <ul>
-                            {e.diagnosisCodes?.map((d,i) =><li key={i}>{d}</li>)}
+                            {e.diagnosisCodes?.map((d,i) =>
+                                <li key={i}> {d} {addDiagnosisDescription(d)}</li>
+                            )}
                         </ul>
                     </div>
                 ))}

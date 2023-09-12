@@ -8,10 +8,6 @@ interface Props {
 
 const DiagnosisListPage = (diagnoses:Props) =>{
 
-  /*  console.log(typeof diagnoses)
-  console.log( diagnoses.diagnoses)
-  diagnoses.diagnoses.map(p=>console.log(p.code))*/
-
     return (
         <div className="App">
             <Box>
