@@ -82,7 +82,4 @@ interface HealthCheckEntry extends BaseEntry{
     healthCheckRating?: HealthCheckEntry;
 }
 
-
-
-
 export type Entry = |HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;

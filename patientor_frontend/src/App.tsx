@@ -34,7 +34,6 @@ const App =()=>{
       setDiagnoses(diagnoses)
     }
     fetchDiagnoseList()
-
     
   }, []);
  
