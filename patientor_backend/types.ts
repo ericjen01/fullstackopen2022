@@ -1,10 +1,9 @@
-/*------------patient related-------------*/
 export interface Patient{
     id?: string;
     name: string;
     dateOfBirth: string;
     ssn?: string;
-    gender: Gender;
+    gender: keyof typeof Gender;
     occupation: string;
     entries?: Entry[]
 }
@@ -18,25 +17,27 @@ export interface PatientEntry{
     occupation: string
 }
 
-export type NewPatientEntry = Omit<PatientEntry, 'id'>;
-export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
-
-/*------------diagnosis related-------------*/
 export interface Diagnosis{
     code: string;
     name: string;
-    latin: string;
+    latin?: string;
 }
+
+type OptionalKeys <T, K extends keyof T > = T extends unknown? Omit<T , K> : never;
+export type DiagnosisLatinAsOption = OptionalKeys<Diagnosis, 'latin'>;
 
 export enum Gender {
-    Male= 'male',
-    Female = 'female',
-    Other = 'other'
+    male= 'male',
+    female = 'female',
+    other = 'other'
 }
 
-export type nonLatinEntryType = Omit<Diagnosis, 'latin'>;
+export enum TreatmentCategory{
+    Hospital = "Hospital",
+    OccupationalHealthcare = "OccupationalHealthcare",
+    HealthCheck = "HealthCheck"
+}
 
-/*------------advanced entry related-------------*/
 export interface BaseEntry {
     id: string;
     date: string;
@@ -46,40 +47,42 @@ export interface BaseEntry {
    // diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
-export enum CareType{
-    HealthCheck= "HealthCheck",
-    OccupationalHealthcare= "OccupationalHealthcare",
-    Hospital = "Hospital"
+  export interface HospitalEntry extends BaseEntry{
+    treatment: keyof typeof TreatmentCategory;
+    discharge?:Discharge
+  //  healthCheckRating?: keyof typeof HealthCheckRating;
+ //   employerName?: string;
 }
 
-export enum healthCheckRating {
+export interface OccupationalHealthcareEntry extends BaseEntry{
+    treatment: keyof typeof TreatmentCategory;
+   // healthCheckRating?: HealthCheckRating;
+    employerName?: string;
+    sickLeave?: SickLeave;
+}
+
+export interface HealthCheckEntry extends BaseEntry{
+    treatment: keyof typeof TreatmentCategory;
+    healthCheckRating?: HealthCheckRating;
+    employerName?: string;
+}
+
+export enum HealthCheckRating {
     "Healthy" = 0,
     "LowRisk" = 1,
     "HighRisk" = 2,
-    "CriticalRisk" = 3
+    "CriticalRisk hmmmm" = 3 
 }
 
-interface HospitalEntry extends BaseEntry{
-    type: string;
-    discharge?: {
-      date: string;
-      criteria: string;
-    }
+export interface Discharge {
+    date: string;
+    criteria: string;
+}
+
+export interface SickLeave {
+    startDate: string;
+    endDate: string;
   }
 
-interface OccupationalHealthcareEntry extends BaseEntry{
-    type: string;
-    employerName: string;
-    healthCheckRating?: healthCheckRating;
-    sickLeave?: {
-        startDate: string;
-        endDate: string;
-    }
-}
-
-interface HealthCheckEntry extends BaseEntry{
-    type: CareType;
-    healthCheckRating?: HealthCheckEntry;
-}
-
-export type Entry = |HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;
+export type nonLatinEntryType = Omit<Diagnosis, "latin">;
+export type Entry = HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;

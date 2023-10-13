@@ -1,8 +1,8 @@
-import {Diagnosis, nonLatinEntryType} from "../types";
+import {Diagnosis, } from "../types";
 import {toNewDiagnosesEntry} from "../utils";
 
 
-const data = [
+const data: Diagnosis[] =  [
   {
     code: "M24.2",
     name: "Disorder of ligament",
@@ -81,15 +81,15 @@ const data = [
 ];
 
 export const allDiagonses: Diagnosis[] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj) as Diagnosis;
+  const object = toNewDiagnosesEntry(obj) ;
   return object;
 });
 
-export const nonLatinEntries: nonLatinEntryType[] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj) /*as nonLatinEntryType*/;
+export const nonLatinEntries: Diagnosis[] = data.map(obj=>{
+  const object = toNewDiagnosesEntry(obj);
   return object;
 });
 
 export default { };
-
+     
 

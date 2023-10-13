@@ -1,5 +1,5 @@
-import  {Patient, Gender /*PatientEntry*/}  from '../types';
-import {toNewPatientEntry, /*toFullPatientEntry*/}  from '../utils';
+import  {Gender, Patient }  from '../types';
+import {toNewPatientEntry, toFullPatientEntry}  from '../utils';
 
 const patients: Patient[] = [
   {
@@ -7,13 +7,13 @@ const patients: Patient[] = [
     name: 'John McClane',
     dateOfBirth: '1986-07-09',
     ssn: '090786-122X',
-    gender: Gender.Male,
+    gender: "male",
     occupation: 'New york city cop',
     entries: [
       {
         id: 'd811e46d-70b3-4d90-b090-4535c7cf8fb1',
         date: '2015-01-02',
-        type: 'Hospital',
+        treatment: 'Hospital',
         specialist: 'MD House',
         diagnosisCodes: ['S62.5'],
         description:
@@ -30,13 +30,13 @@ const patients: Patient[] = [
     name: 'Martin Riggs',
     dateOfBirth: '1979-01-30',
     ssn: '300179-777A',
-    gender: Gender.Male,
+    gender: "male",
     occupation: 'Cop',
     entries: [
       {
         id: 'fcd59fa6-c4b4-4fec-ac4d-df4fe1f85f62',
         date: '2019-08-05',
-        type: 'OccupationalHealthcare',
+        treatment: 'OccupationalHealthcare',
         specialist: 'MD House',
         employerName: 'HyPD',
         diagnosisCodes: ['Z57.1', 'Z74.3', 'M51.2'],
@@ -54,7 +54,7 @@ const patients: Patient[] = [
     name: 'Hans Gruber',
     dateOfBirth: '1970-04-25',
     ssn: '250470-555L',
-    gender: Gender.Other,
+    gender: "other",
     occupation: 'Technician',
     entries: [],
   },
@@ -63,14 +63,14 @@ const patients: Patient[] = [
     name: 'Dana Scully',
     dateOfBirth: '1974-01-05',
     ssn: '050174-432N',
-    gender: Gender.Female,
+    gender: "female",
     occupation: 'Forensic Pathologist',
     entries: [
       {
         id: 'b4f4eca1-2aa7-4b13-9a18-4a5535c3c8da',
         date: '2019-10-20',
         specialist: 'MD House',
-        type: 'HealthCheck',
+        treatment: 'HealthCheck',
         description: 'Yearly control visit. Cholesterol levels back to normal.',
         healthCheckRating: 0,
       },
@@ -78,7 +78,7 @@ const patients: Patient[] = [
         id: 'fcd59fa6-c4b4-4fec-ac4d-df4fe1f85f62',
         date: '2019-09-10',
         specialist: 'MD House',
-        type: 'OccupationalHealthcare',
+        treatment: 'OccupationalHealthcare',
         employerName: 'FBI',
         description: 'Prescriptions renewed.',
       },
@@ -86,7 +86,7 @@ const patients: Patient[] = [
         id: '37be178f-a432-4ba4-aac2-f86810e36a15',
         date: '2018-10-05',
         specialist: 'MD House',
-        type: 'HealthCheck',
+        treatment: 'HealthCheck',
         description:
           'Yearly control visit. Due to high cholesterol levels recommended to eat more vegetables.',
         healthCheckRating: 1,
@@ -98,33 +98,33 @@ const patients: Patient[] = [
     name: 'Matti Luukkainen',
     dateOfBirth: '1971-04-09',
     ssn: '090471-8890',
-    gender: Gender.Male,
+    gender: "male",
     occupation: 'Digital evangelist',
     entries: [
       {
         id: '54a8746e-34c4-4cf4-bf72-bfecd039be9a',
         date: '2019-05-01',
         specialist: 'Dr Byte House',
-        type: 'HealthCheck',
+        treatment: 'HealthCheck',
         description: 'Digital overdose, very bytestatic. Otherwise healthy.',
-        healthCheckRating: 0,
+        healthCheckRating: 3,
       },
     ],
   },
 ];
 
+const genderValidation = (param:string):param is Gender=>{
+  return Object.values(Gender).map(v=>v.toString()).includes(param);
+} ;
+genderValidation("male");
+
+
 //full patient data
-export const data_Patients:Patient[] = patients.map(obj=>{
-    //const object =toFullPatientEntry(obj);
-    return obj;
+export const data_patients:Patient[] = patients.map(obj=>{
+  const object = toFullPatientEntry(obj) ;
+  return object;
 });
-export const data_newPatients:Patient[] = patients.map(obj=>{
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const object =toNewPatientEntry(obj);
-    return object;
+export const data_updatedPatientList:Patient[] = patients.map(obj=>{
+  const object =toNewPatientEntry(obj) ;
+  return object;
 });
-
-
-
-
-

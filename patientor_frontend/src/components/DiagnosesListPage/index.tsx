@@ -1,7 +1,6 @@
 import {Diagnosis} from '../../types'
 import { Box, Table, TableHead, TableRow, Typography, TableCell,TableBody, } from '@mui/material';
 
-
 interface Props {
     diagnoses: Diagnosis[]
 }
