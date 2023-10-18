@@ -3,6 +3,50 @@ import {toNewPatientEntry, toFullPatientEntry}  from '../utils';
 
 const patients: Patient[] = [
   {
+    id: 'd2773334-f727-11e9-8f0b-362b9e155667',
+    name: 'Joe Doe',
+    dateOfBirth: '1984-03-04',
+    ssn: '0907378-132X',
+    gender: "male",
+    occupation: 'Sales',
+    entries: [
+      {
+        id: 'd811e7jd-70b3-4d90-b090-4535c7cf8fb1',
+        date: '2013-02-12',
+        treatment: 'Hospital',
+        specialist: 'Dr Cyber',
+        diagnosisCodes: ['F43.2'],
+        description: "Adjustment disorders",
+        discharge: {
+          date: '2013-02-16',
+          criteria: 'Recovered from adjustment disorders',
+        },
+      },
+      {
+        id: 'fcd49956-c4w4-4fec-ac4d-df4fe1f85f62',
+        date: '2016-03-01',
+        treatment: 'OccupationalHealthcare',
+        specialist: 'MD House',
+        employerName: 'AIT',
+        diagnosisCodes: ['H54.7', 'MJ06.9'],
+        description:
+          'Flu-induced fever and vision loss. Breathing issues due to acute upper respiratory infection',
+        sickLeave: {
+          startDate: '2016-03-01',
+          endDate: '2016-03-30',
+        },
+      },
+      {
+        id: 'b4f4wba1-2aa7-4b13-9a18-4a5535c3c8da',
+        date: '2017-03-16',
+        specialist: 'FSO House',
+        treatment: 'HealthCheck',
+        description: 'Yearly control visit. Minor increased blood pressure.',
+        healthCheckRating: 2,
+      },
+    ],
+  },
+  {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
     dateOfBirth: '1986-07-09',
@@ -15,7 +59,7 @@ const patients: Patient[] = [
         date: '2015-01-02',
         treatment: 'Hospital',
         specialist: 'MD House',
-        diagnosisCodes: ['S62.5'],
+        diagnosisCodes: ['S62.5', 'F43.2'],
         description:
           "Healing time appr. 2 weeks. patient doesn't remember how he got the injury.",
         discharge: {

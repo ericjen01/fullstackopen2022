@@ -1,3 +1,22 @@
+export enum HealthCheckRating {
+    "Healthy" = 0,
+    "LowRisk" = 1,
+    "HighRisk" = 2,
+    "CriticalRisk hmmmm" = 3 
+}
+
+export enum Gender {
+    male= 'male',
+    female = 'female',
+    other = 'other'
+}
+
+export enum TreatmentCategory{
+    Hospital = "Hospital",
+    OccupationalHealthcare = "OccupationalHealthcare",
+    HealthCheck = "HealthCheck"
+}
+
 export interface Patient{
     id?: string;
     name: string;
@@ -26,37 +45,22 @@ export interface Diagnosis{
 type OptionalKeys <T, K extends keyof T > = T extends unknown? Omit<T , K> : never;
 export type DiagnosisLatinAsOption = OptionalKeys<Diagnosis, 'latin'>;
 
-export enum Gender {
-    male= 'male',
-    female = 'female',
-    other = 'other'
-}
-
-export enum TreatmentCategory{
-    Hospital = "Hospital",
-    OccupationalHealthcare = "OccupationalHealthcare",
-    HealthCheck = "HealthCheck"
-}
-
 export interface BaseEntry {
     id: string;
     date: string;
     specialist: string;
     description: string;
-    diagnosisCodes?: Diagnosis['code'][];
-   // diagnosisCodes?: Array<Diagnosis['code']>;
+    //diagnosisCodes?: Diagnosis['code'][];
+    diagnosisCodes?: Diagnosis["code"][];
 }
 
   export interface HospitalEntry extends BaseEntry{
     treatment: keyof typeof TreatmentCategory;
     discharge?:Discharge
-  //  healthCheckRating?: keyof typeof HealthCheckRating;
- //   employerName?: string;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry{
     treatment: keyof typeof TreatmentCategory;
-   // healthCheckRating?: HealthCheckRating;
     employerName?: string;
     sickLeave?: SickLeave;
 }
@@ -65,13 +69,6 @@ export interface HealthCheckEntry extends BaseEntry{
     treatment: keyof typeof TreatmentCategory;
     healthCheckRating?: HealthCheckRating;
     employerName?: string;
-}
-
-export enum HealthCheckRating {
-    "Healthy" = 0,
-    "LowRisk" = 1,
-    "HighRisk" = 2,
-    "CriticalRisk hmmmm" = 3 
 }
 
 export interface Discharge {

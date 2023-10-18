@@ -34,8 +34,6 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
             const patientInfo = await patientInfoService.getAll(patientId)
             setPatientInfo(patientInfo)
             setEntries(patientInfo.entries!) //Non-null assertion operator
-            console.log("PatientInfoPage>patient info fetched.......")
-            console.log("PatientInfoPage>patientInfo.entries: ", patientInfo.entries)
         }
         fetchPatientInfo()
     }, [patientId]);
@@ -62,14 +60,11 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
     }
     
     const patientTreatmentHistory =()=>{
-        console.log("PatientInfoPage>patientTreatmentHistory is called----check ")
         if(entries){
-            console.log("PatientInfoPage>patientTreatmentHistory>entries: ", entries)
             return (
             <div>
                 <h3>Entries</h3>
                 {Object.values(entries).map((e:Entry)=>{
-                    console.log("PatientInfoPage>**************", entries)
                    return (
                     <div key={e.id}>
                         {HealthCareEntry(e, diagnoses )}

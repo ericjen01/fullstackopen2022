@@ -22,14 +22,14 @@ export interface BaseEntry{
     diagnosisCodes?: Array<Diagnosis['code']>
 }
 
-interface HospitalEntry extends BaseEntry{
+export interface HospitalEntry extends BaseEntry{
     treatment: TreatmentCategory.Hospital;
     discharge?:{
-        startDate: string;
-        endDate: string;
+        date: string;
+        criteria: string;
     }
     healthCheckRating?: HealthCheckRating;
-    employerName?: string;
+    employerName?: string; 
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry{
@@ -59,11 +59,11 @@ export enum HealthCheckRating {
 
 export enum TreatmentCategory{
     Hospital = "Hospital",
-    OccupationalHealthcare = "Occupational Healthcare",
-    HealthCheck = "Health Check"
+    OccupationalHealthcare = "OccupationalHealthcare",
+    HealthCheck = "HealthCheck"
 } 
 
-export type Entry = |HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;
+export type Entry = HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;
 export type PatientFormValues = Omit<Patient, "id"|"entries">
 export type nonLatinEntryType = Omit<Diagnosis, 'latin'>;
 

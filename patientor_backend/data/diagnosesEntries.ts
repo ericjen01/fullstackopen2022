@@ -1,7 +1,6 @@
 import {Diagnosis, } from "../types";
 import {toNewDiagnosesEntry} from "../utils";
 
-
 const data: Diagnosis[] =  [
   {
     code: "M24.2",
