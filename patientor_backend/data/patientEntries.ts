@@ -15,20 +15,20 @@ const patients: Patient[] = [
         date: '2013-02-12',
         treatment: 'Hospital',
         specialist: 'Dr Cyber',
-        diagnosisCodes: ['F43.2'],
+        diagnosisCodes: ['F43.2', 'H35.29'],
         description: "Adjustment disorders",
         discharge: {
           date: '2013-02-16',
           criteria: 'Recovered from adjustment disorders',
         },
-      },
+      }, 
       {
         id: 'fcd49956-c4w4-4fec-ac4d-df4fe1f85f62',
         date: '2016-03-01',
         treatment: 'OccupationalHealthcare',
         specialist: 'MD House',
         employerName: 'AIT',
-        diagnosisCodes: ['H54.7', 'MJ06.9'],
+        diagnosisCodes: ['H54.7', 'J06.9'],
         description:
           'Flu-induced fever and vision loss. Breathing issues due to acute upper respiratory infection',
         sickLeave: {
@@ -39,7 +39,7 @@ const patients: Patient[] = [
       {
         id: 'b4f4wba1-2aa7-4b13-9a18-4a5535c3c8da',
         date: '2017-03-16',
-        specialist: 'FSO House',
+        specialist: 'FSO Coder',
         treatment: 'HealthCheck',
         description: 'Yearly control visit. Minor increased blood pressure.',
         healthCheckRating: 2,
@@ -116,8 +116,8 @@ const patients: Patient[] = [
         specialist: 'MD House',
         treatment: 'HealthCheck',
         description: 'Yearly control visit. Cholesterol levels back to normal.',
-        healthCheckRating: 0,
-      },
+        healthCheckRating: 1,
+      }, 
       {
         id: 'fcd59fa6-c4b4-4fec-ac4d-df4fe1f85f62',
         date: '2019-09-10',
@@ -133,7 +133,7 @@ const patients: Patient[] = [
         treatment: 'HealthCheck',
         description:
           'Yearly control visit. Due to high cholesterol levels recommended to eat more vegetables.',
-        healthCheckRating: 1,
+        healthCheckRating: 2,
       },
     ],
   },

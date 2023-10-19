@@ -49,8 +49,7 @@ export interface BaseEntry {
     id: string;
     date: string;
     specialist: string;
-    description: string;
-    //diagnosisCodes?: Diagnosis['code'][];
+    description: string;    
     diagnosisCodes?: Diagnosis["code"][];
 }
 

@@ -94,10 +94,12 @@ const toHospitalEntry = (obj: Entry): HospitalEntry => (obj);
 const toOccupationalHealthcareEntry = (obj: Entry): OccupationalHealthcareEntry => (obj);
 const toHealthCheckEntry = (obj: Entry): HealthCheckEntry => (obj);
 
+
 const parseDiagnosesCode = (param: unknown): Diagnosis["code"] =>{
     if(!param || typeof param !== "string")throw new Error("Error in new diagnose code: code doesn't exists or is not a correct type");
     return param;
 };
+
 
 const toTreatmentEntry = (obj:unknown): Entry => {
     if (!obj||typeof obj !=='object')  throw new Error ('utils>treatment does not exists or is not an object');
@@ -114,10 +116,12 @@ const toTreatmentEntry = (obj:unknown): Entry => {
             description: parseStringObject(objValues.description),
             treatment: parseTreatmentCategory(objValues.treatment),
         }; 
+        
         if('diagnosisCodes' in objValues){
-            (objValues.diagnosisCodes as string[]).map(d => (parseDiagnosesCode(d)));
+           entry.diagnosisCodes = (objValues.diagnosisCodes as string[]).map(d => (parseDiagnosesCode(d)));
         }
-        if('discharge' in objValues){
+
+        if('discharge' in objValues && "diagnosisCodes" in objValues){
           toHospitalEntry(entry).discharge = toDischarge(objValues.discharge);
         }
         if('sickLeave' in objValues && 'employerName' in objValues){
