@@ -14,22 +14,20 @@ interface Props {
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
 }
 
+
 const PatientListPage = ({ patients, setPatients } : Props ) => {
-  //console.log("patients")
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
-
   const openModal = (): void => setModalOpen(true);
-
   const closeModal = (): void => {
     setModalOpen(false);
     setError(undefined);
   };
 
   const submitNewPatient = async (values: PatientFormValues) => {
-    try {
-      const patient = await patientService.create(values);
+    try {  
+      const patient = await patientService.create(values); 
       setPatients(patients.concat(patient));
       setModalOpen(false);
     } catch (e: unknown) {
@@ -46,7 +44,6 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         setError("Unknown error");
       }
     }
-  
   };
 
   const navigate = useNavigate();
@@ -83,7 +80,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
+        </TableBody> 
       </Table>
       <AddPatientModal
         modalOpen={modalOpen}

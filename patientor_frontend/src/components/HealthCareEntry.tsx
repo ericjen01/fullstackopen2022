@@ -1,79 +1,119 @@
 import { HealithinessBar, CareTypeIcon,  } from "./IconPack"
-
-import { Entry,Diagnosis } from "../types"
-
-
-/*interface Props{
-    entry: Entry
-    diagnoses:Diagnosis[]
-}*/
+import { Entry,Diagnosis,TreatmentCategory, HospitalEntry } from "../types"
 
 const HealthCareEntry = (entry:Entry, diagnoses:Diagnosis[]) =>{
+    
+    const EntryDate = () => (
+        <div> Date: {entry.date} </div>
+    )
 
-    const addDiagnosisDescription =(diagCode:string)=>{
+    const HospitalVisit = () => (
+        <div> Hospital Visit {CareTypeIcon(TreatmentCategory.Hospital)} </div>
+    )
+
+    const OccupationalHealthcare = () => (
+        <div> Occupational Healthcare {CareTypeIcon(TreatmentCategory.OccupationalHealthcare)} </div>
+    )
+
+    const HealthCheck = () => (
+        <div> Health Check {CareTypeIcon(TreatmentCategory.HealthCheck)} </div>
+    )          
+
+    const ReasonForVisit = () => (
+        <div> Reason of Visit: {entry.description} </div>
+    )
+
+    const DoctorInCharge = () => (
+        <div> diagnose by {entry.specialist} </div>
+    )
+
+    const Employer = () => (
+        <div> Employer Name: {entry.employerName} </div>
+    )
+
+    const HealthRating = () =>(
+        <div> Health Check Rating: {HealithinessBar(entry.healthCheckRating)} </div>
+    )
+
+    const DiagDetail =(diagCode:string)=>{
         const match = (diagnoses.filter(d=>d.code === diagCode))[0]?.name
         return match
     }
 
+    const Diagnoses = (obj: { [s: string]: Entry }) => {
+        const entry = Object.values(obj)[0]
+        if(entry.diagnosisCodes){
+            return(
+                <div style={{paddingTop: "1rem", display: "inline-block"}}>
+                    <span>Diagnose Detail: <br/></span>
+                    <ul>
+                        {entry.diagnosisCodes?.map((diagCode,i) =>
+                        <li key={i}> {diagCode} {DiagDetail(diagCode)}</li>
+                        )}
+                    </ul>
+                </div>
+            )
+        }return null
+    }
+
+    const Discharge = (obj: { [s: string]: HospitalEntry }) => {
+        const entry = Object.values(obj)[0]
+        if(entry.discharge){
+             return (
+                <div>
+                    <span>Discharged on: {entry.discharge.date} <br/></span>
+                    <span >Criteria: {entry.discharge.criteria}<br/></span>
+                </div>
+             ) 
+        }return null;
+    };
+
     const HospitalEntry = () =>{
         return (
-            <div key={entry.id} style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding: '0.8rem' , margin:"0.4rem"}}>
-                <span>{entry.date} <br/></span>
-                <span> Hospital Visit {CareTypeIcon(entry.type)} <br/></span>
-                <span>{entry.description}</span>
-                <ul>
-                    {entry.diagnosisCodes?.map((diagCode,i) =>
-                    <li key={i}> {diagCode} {addDiagnosisDescription(diagCode)}</li>
-                    )}
-                </ul>
-                <span> diagnose by {entry.specialist} </span>
-            </div>  
+            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
+                <EntryDate/>
+                <HospitalVisit/>
+                <ReasonForVisit/>
+                <Diagnoses obj = {entry}/>
+                <Discharge obj = {entry as HospitalEntry} /><br/>
+                <DoctorInCharge/>
+            </div> 
         )     
     }
 
     const OccupationalHealthcareEntry = () =>{
         return (
-            <div key={entry.id} style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding: '0.8rem' , margin:"0.4rem"}}>
-                <span>{entry.date} <br/></span>
-                <span> Occupational Healthcare {CareTypeIcon(entry.type)} <br/></span>
-                <span>Employer Name: {entry.employerName} <br/></span>
-                <span>{entry.description}</span>
-                <ul>
-                    {entry.diagnosisCodes?.map((diagCode,i) =>
-                    <li key={i}> {diagCode} {addDiagnosisDescription(diagCode)}</li>
-                    )}
-                </ul>
-                <span> diagnose by {entry.specialist} </span>
+            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
+                <EntryDate/>
+                <OccupationalHealthcare/>
+                <Employer/>
+                <ReasonForVisit/>
+                <Diagnoses obj = {entry}/><br/>
+                <DoctorInCharge/>
             </div>  
         )     
     }
-
     const HealthCheckEntry = () =>{
         return (
-            <div key={entry.id} style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding: '0.8rem', margin:"0.4rem"}}>
-                <span>{entry.date} <br/></span>
-                <span> Health Check {CareTypeIcon(entry.type)} <br/></span>
-                <span>Employer Name: {entry.employerName} <br/></span>
-                <span>{entry.description}<br/></span>
-                <span>Health Check Rating: {HealithinessBar(entry.healthCheckRating)} <br/></span>
-                <ul>
-                    {entry.diagnosisCodes?.map((diagCode,i) =>
-                    <li key={i}> {diagCode} {addDiagnosisDescription(diagCode)}</li>
-                    )}
-                </ul>
-                <span> diagnose by {entry.specialist} </span>
+            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
+                <EntryDate/>
+                <HealthCheck/>
+                <Employer/>
+                <ReasonForVisit/>
+                <HealthRating/>
+                <Diagnoses obj = {entry}/><br/>
+                <DoctorInCharge/>
             </div>  
         )     
     }
 
-    switch(entry.type){
-        case "Hospital": return <HospitalEntry/>;
-        case "OccupationalHealthcare": return <OccupationalHealthcareEntry/>;
-        case "HealthCheck": return <HealthCheckEntry/>;
-        default: return null
+    switch(entry.treatment){
+        case entry.treatment=TreatmentCategory.Hospital: return <HospitalEntry/>;
+        case entry.treatment=TreatmentCategory.OccupationalHealthcare: return <OccupationalHealthcareEntry/>;
+        case entry.treatment=TreatmentCategory.HealthCheck: return <HealthCheckEntry/>;
+        default: return null;
     }
 }
-
 export default HealthCareEntry;
 
 

@@ -1,12 +1,10 @@
 import express from 'express';
 import patientService from "../services/patientsService";
-//import {PatientEntry/*, NoSsnPatientEntry, Gender*/} from "../types";
-//import { useParams } from 'react-router-dom';
 import { toNewPatientEntry } from '../utils';
 
 const router = express.Router();
 
-//3001/api/patients/ + ""
+//3001/api/patients/...
 router.get('/', (_req,res)=>{
     res.send(JSON.stringify(patientService.allPatients()))  ;
 });
@@ -17,11 +15,10 @@ router.get('/:id', (req,res)=>{
     res.send(JSON.stringify(patientService.patientById(reqstedId)));
 });
 
-router.post("/",(req,res)=>{
+router.post("/",(req,res)=>{ 
 try{
-    const screenedPatientEntry = toNewPatientEntry(req.body);
+  const screenedPatientEntry = toNewPatientEntry(req.body);
     const fullPatientEntryWithId= patientService.addPatient(screenedPatientEntry);
-
     res.json(fullPatientEntryWithId);
     }catch (err:unknown){
         let errorMessage = 'something is wrong (backend>routes>patients). ';
@@ -29,8 +26,6 @@ try{
             errorMessage += 'Error: ' + err.message;
         }res.status(400).send(errorMessage);
 }
-
-
 });
 
 export default router;

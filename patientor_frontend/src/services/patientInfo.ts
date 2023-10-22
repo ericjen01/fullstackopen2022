@@ -1,14 +1,21 @@
 import axios from 'axios';
-import {Patient} from "../types";
+import {Patient, Entry} from "../types";
 import { apiBaseUrl } from "../constants";
 
 const getAll = async(patientId:string|unknown)=>{
-  
     const {data} = await axios.get<Patient>(`${apiBaseUrl}/patients/${patientId}`)
     return data
 }
 
-export default getAll
+const create = async (object:Entry,patientId:string|unknown ) => {
+    const { data } = await axios.post<Entry>(`${apiBaseUrl}/patients/${patientId}/entries`,object);
+    console.log("frontend>patientInfo.ts>data: ", data)
+    return data;
+};
+
+const exportedObject={getAll, create}
+
+export default exportedObject
 
 
 

@@ -1,15 +1,7 @@
-
-
 export interface Diagnosis{
     code: string;
     name:string;
     latin?:string;
-}
-
-export enum Gender{
-    Male="male",
-    Female = "female",
-    Other = "other"
 }
 
 export interface Patient {
@@ -19,44 +11,43 @@ export interface Patient {
     gender: Gender;
     ssn?: string;
     dateOfBirth?: string;
-    entries?: Entry[]
+    entries?: Entry[];
   }
 
-
-export type PatientFormValues = Omit<Patient, "id"|"entries">
-export type nonLatinEntryType = Omit<Diagnosis, 'latin'>;
-
-
 export interface BaseEntry{
-    id: string;
+    id?: string;
     date: string;
     specialist: string;
     description: string; 
     diagnosisCodes?: Array<Diagnosis['code']>
 }
 
-interface HospitalEntry extends BaseEntry{
-    type: "Hospital";
-    discharge:{
-        startDate: string;
-        endDate: string;
+export interface HospitalEntry extends BaseEntry{
+    treatment: TreatmentCategory.Hospital;
+    discharge?:{
+        date: string;
+        criteria: string;
     }
     healthCheckRating?: HealthCheckRating;
-    employerName?: string;
-
+    employerName?: string; 
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry{
-    type: "OccupationalHealthcare";
+    treatment: TreatmentCategory.OccupationalHealthcare;
     healthCheckRating?: HealthCheckRating;
     employerName?: string;
 }
 
 interface HealthCheckEntry extends BaseEntry{
-    type: "HealthCheck";
+    treatment: TreatmentCategory.HealthCheck
     healthCheckRating?: HealthCheckRating;
     employerName?: string;
+}
 
+export enum Gender{
+    Male = "male",
+    Female = "female",
+    Other = "other"
 }
 
 export enum HealthCheckRating {
@@ -66,4 +57,17 @@ export enum HealthCheckRating {
     "CriticalRisk" = 3
 }
 
-export type Entry = |HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;
+export enum TreatmentCategory{
+    Hospital = "Hospital",
+    OccupationalHealthcare = "OccupationalHealthcare",
+    HealthCheck = "HealthCheck"
+} 
+
+export type Entry = HealthCheckEntry|HospitalEntry| OccupationalHealthcareEntry;
+export type PatientFormValues = Omit<Patient, "id"|"entries">
+export type nonLatinEntryType = Omit<Diagnosis, 'latin'>;
+
+// Define special omit for unions
+//type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+// Define Entry without the 'id' property
+//type EntryWithoutId = UnionOmit<Entry, 'id'>;

@@ -9,6 +9,7 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import BadgeIcon from '@mui/icons-material/Badge';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { styled } from '@mui/material/styles';
+import { TreatmentCategory } from "../types";
 
 const StyledHealthinessBar = styled(Rating)({
     iconFilled: {
@@ -35,9 +36,9 @@ export const HealithinessBar = (rating:number|any) => {
 
 export const CareTypeIcon=(careType:string)=>{
     switch(careType){
-        case "Hospital": return <LocalHospitalIcon style={{color: 'red', paddingRight: "0.5rem"}}/>
-        case "OccupationalHealthcare": return <BadgeIcon style={{color: 'blue', paddingRight: "0.5rem"}}/>
-        case "HealthCheck": return <NoteAltIcon style={{color: 'orange', paddingRight: "0.5rem"}}/>
+        case TreatmentCategory.Hospital: return <LocalHospitalIcon style={{color: 'red', paddingRight: "0.5rem"}}/>
+        case TreatmentCategory.OccupationalHealthcare: return <BadgeIcon style={{color: 'blue', paddingRight: "0.5rem"}}/>
+        case TreatmentCategory.HealthCheck: return <NoteAltIcon style={{color: 'orange', paddingRight: "0.5rem"}}/>
 
         default: return <HelpCenterIcon style={{color: 'grey', paddingRight: "0.5rem"}}/>
     }

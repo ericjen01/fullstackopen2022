@@ -1,13 +1,16 @@
-import {allDiagonses, nonLatinEntries} from "../data/diagnosesEntries";
-import { Diagnosis, nonLatinEntryType } from "../types";
+import {allDiagonses, nonLatinEntries, diagnosisCodes} from "../data/diagnosesEntries";
+import { Diagnosis } from "../types";
 
 const getAllDiagnoses = (): Diagnosis[]=>{
-    //console.log("test", diagnosesEntries);
     return allDiagonses;
 };
-
-const getNonLatinEntries = ():nonLatinEntryType[]=>{
-    return nonLatinEntries.map(({code, name})=>({code, name}));
+const getNonLatinEntries = (): Diagnosis[]=>{
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return nonLatinEntries; 
 };
 
-export default {getAllDiagnoses, getNonLatinEntries};
+const getDiagnosisCodes = (): string[]=>{
+    return diagnosisCodes;
+};
+
+export default {getAllDiagnoses, getNonLatinEntries, getDiagnosisCodes};
