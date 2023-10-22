@@ -78,7 +78,7 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
     }
     
     return (
-        <div>
+        <div className="container">
             <h2>Clinical Profile</h2>
             <h2>{patientInfo?.name}, {patientInfo?.gender} {GenIcon(patientInfo)}</h2>
             <span>SSN: {patientInfo?.ssn}</span>

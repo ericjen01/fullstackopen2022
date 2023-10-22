@@ -1,15 +1,7 @@
-import {allDiagonses, nonLatinEntries} from "../data/diagnosesEntries";
+import {allDiagonses, nonLatinEntries, diagnosisCodes} from "../data/diagnosesEntries";
 import { Diagnosis } from "../types";
 
 const getAllDiagnoses = (): Diagnosis[]=>{
-
-   /* const objVal = Object.values(allDiagonses);
-    const myEnum : string[] = [];
-    objVal.map(d=>{
-        myEnum.push(d.code + "= " + d.name);
-    });
-    console.log(myEnum);*/
-
     return allDiagonses;
 };
 const getNonLatinEntries = (): Diagnosis[]=>{
@@ -17,4 +9,8 @@ const getNonLatinEntries = (): Diagnosis[]=>{
     return nonLatinEntries; 
 };
 
-export default {getAllDiagnoses, getNonLatinEntries};
+const getDiagnosisCodes = (): string[]=>{
+    return diagnosisCodes;
+};
+
+export default {getAllDiagnoses, getNonLatinEntries, getDiagnosisCodes};

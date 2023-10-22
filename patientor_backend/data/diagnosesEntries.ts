@@ -89,6 +89,11 @@ export const nonLatinEntries: Diagnosis[] = data.map(obj=>{
   return object;
 });
 
+export const diagnosisCodes: Diagnosis["code"][] = data.map(obj=>{
+  const object = toNewDiagnosesEntry(obj).code;
+  return object;
+});
+
 export default { };
      
 

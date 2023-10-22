@@ -39,8 +39,8 @@ const patients: Patient[] = [
       {
         id: 'b4f4wba1-2aa7-4b13-9a18-4a5535c3c8da',
         date: '2017-03-16',
-        specialist: 'FSO Coder',
         treatment: 'HealthCheck',
+        specialist: 'FSO Coder',
         description: 'Yearly control visit. Minor increased blood pressure.',
         healthCheckRating: 2,
       },
@@ -113,7 +113,7 @@ const patients: Patient[] = [
       {
         id: 'b4f4eca1-2aa7-4b13-9a18-4a5535c3c8da',
         date: '2019-10-20',
-        specialist: 'MD House',
+        specialist: 'Dr George',
         treatment: 'HealthCheck',
         description: 'Yearly control visit. Cholesterol levels back to normal.',
         healthCheckRating: 1,
@@ -162,8 +162,6 @@ const genderValidation = (param:string):param is Gender=>{
 } ;
 genderValidation("male");
 
-
-//full patient data
 export const data_patients:Patient[] = patients.map(obj=>{
   const object = toFullPatientEntry(obj) ;
   return object;

@@ -113,8 +113,6 @@ const HealthCareEntry = (entry:Entry, diagnoses:Diagnosis[]) =>{
         case entry.treatment=TreatmentCategory.HealthCheck: return <HealthCheckEntry/>;
         default: return null;
     }
- 
-
 }
 export default HealthCareEntry;
 

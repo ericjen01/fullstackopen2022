@@ -10,7 +10,7 @@ const DiagnosisListPage = (diagnoses:Props) =>{
     return (
         <div className="App">
             <Box>
-                <Typography align="center" variant="h6">Patient list</Typography>
+                <Typography align="center" variant="h6">Diagnoses</Typography>
             </Box>
             
             <Table style={{ marginBottom: "1em" }}>

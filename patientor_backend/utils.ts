@@ -13,7 +13,7 @@ const isDate = (param: string): boolean => (Boolean(Date.parse(param)));
 const isHealthCheckRating = (param: number): param is HealthCheckRating => (Object.values(HealthCheckRating).includes(param));
 
 
-const parseStringObject = (item: unknown): string =>{
+const parseStringObject = (item: unknown): string => {
     if(!item||!isString(item)){
         throw new Error("incorrect or missing string object: " + item);
     }
@@ -27,14 +27,14 @@ const parseGender = (gender: unknown): Gender => {
     return gender;
 };
 
-const parseTreatmentCategory = (category: unknown): ("Hospital" | "OccupationalHealthcare" |"HealthCheck") =>{
+const parseTreatmentCategory = (category: unknown): ("Hospital" | "OccupationalHealthcare" |"HealthCheck") => {
     if(!category || !isString(category) || !isTreatmentCategory(category)){
         throw new Error('Incorrect or missing treatment category: ' + category);
     }
     return category;
 };
 
-const parseDate = (date: unknown): string =>{
+const parseDate = (date: unknown): string => {
     if(!date || !isString(date) || !isDate(date)){
         throw new Error("incorrect or missing date info: " + date);
     }
@@ -46,12 +46,10 @@ const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
     return rating;
 };
 
-const parseEmployerName = (param: unknown): string =>{
+const parseEmployerName = (param: unknown): string => {
     if(!param || !isString(param)) throw new Error ("incorrect or missing Employer Name: " + param);
     return param;
 };
-
-
 
 export const toNewDiagnosesEntry = (entry: unknown):Diagnosis => {
     if(!entry || typeof entry !== "object"){
@@ -79,7 +77,7 @@ const toDischarge = (obj: unknown): Discharge => {
     }throw new Error("incorrect or missing discharge info/data: " + Object.values(obj));
 };
 
-const toSickLeave = (obj: unknown): SickLeave =>{
+const toSickLeave = (obj: unknown): SickLeave => {
     if(!obj || typeof obj !== 'object') throw new Error ("incorrect or missing sick leave intfo/data: " + obj);
     if("startDate" in obj && "endDate" in obj){
         const sickLeave : SickLeave ={
@@ -95,11 +93,10 @@ const toOccupationalHealthcareEntry = (obj: Entry): OccupationalHealthcareEntry 
 const toHealthCheckEntry = (obj: Entry): HealthCheckEntry => (obj);
 
 
-const parseDiagnosesCode = (param: unknown): Diagnosis["code"] =>{
+export const parseDiagnosesCode = (param: unknown): Diagnosis["code"] => {
     if(!param || typeof param !== "string")throw new Error("Error in new diagnose code: code doesn't exists or is not a correct type");
     return param;
 };
-
 
 const toTreatmentEntry = (obj:unknown): Entry => {
     if (!obj||typeof obj !=='object')  throw new Error ('utils>treatment does not exists or is not an object');
@@ -136,7 +133,7 @@ const toTreatmentEntry = (obj:unknown): Entry => {
 };
 
 export const 
-toFullPatientEntry = (obj:unknown): Patient =>{
+toFullPatientEntry = (obj:unknown): Patient => {
     if (!obj||typeof obj !=='object')  throw new Error ('** entry does not exists or is not an object');
     if('id'in obj && 'name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
         const patient : Patient = {
@@ -154,7 +151,7 @@ toFullPatientEntry = (obj:unknown): Patient =>{
     }  throw new Error('Incorrect data in full patient history: some fields are missing');
 };
 
-export const toNewPatientEntry = (obj:unknown):Patient =>{
+export const toNewPatientEntry = (obj:unknown):Patient => {
     if(!obj || typeof obj !=='object'){ throw new Error ('toNewPatientEntry: incomplete or missing data'); }
     if ('name'in obj && 'dateOfBirth'in obj && 'ssn'in obj && 'gender'in obj && 'occupation'in obj){
         const newEntry: Patient ={
