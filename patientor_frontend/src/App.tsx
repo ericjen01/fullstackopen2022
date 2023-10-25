@@ -14,6 +14,7 @@ import PatientListPage from "./components/PatienListPage";
 
 import diagnoseseService from "./services/diagnoses"
 import DiagnosisListPage from "./components/DiagnosesListPage"
+//import DiagnosisCodesPage from './components/DiagnosisCodesPage';
 
 import PatientInfoPage from "./components/PatientInfoPage";
 
@@ -21,6 +22,7 @@ const App =()=>{
   
   const [patients, setPatients] = useState<Patient[]>([])
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
+  //const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([])
   const [specialists, setSpecialists] = useState<BaseEntry["specialist"][]>([])
 
   useEffect(() => {
@@ -45,6 +47,15 @@ const App =()=>{
     }
     fetchDiagnoseList()
 
+
+    /*const fetchDiagnosisCodes = async () => {
+      //localhost:3001/api/diagnoses/all under 'diagnoseseService.allEntries()'
+      const diagnosisCodes = await diagnoseseService.diagnosisCodes() 
+      setDiagnosisCodes(diagnosisCodes)
+    }
+    fetchDiagnosisCodes()
+    */
+
     
   }, []);
  
@@ -64,6 +75,7 @@ const App =()=>{
           <Route path = "/diagnoses/all" element = {<DiagnosisListPage diagnoses = {diagnoses}/>}/>
           <Route path = "/patients/:id" element = {<PatientInfoPage patients = {patients} setPatients = {setPatients} diagnoses = {diagnoses}/>} />
           <Route path = "/specialists" element = {<SpecialistsPage specialists = {specialists}/>}/>
+          {/*<Route path = "/diagnosiscodes" element = {<DiagnosisCodesPage diagnosisCodes = {diagnosisCodes}/>}/>*/}
         </Routes>
       </Container>
     </Router>

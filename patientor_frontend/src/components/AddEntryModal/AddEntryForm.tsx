@@ -4,8 +4,10 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Entry, Diagnosis, TreatmentCategory } from "../../types";
+import { BaseEntry, Entry, Diagnosis, TreatmentCategory } from "../../types";
 import specialistListService from "../../services/specialists";
+//import diagnosisCodesService from "../../services/diagnoses";
+import diagnosesService from "../../services/diagnoses";
 
 interface Props {
     onCancel: () => void;
@@ -13,37 +15,42 @@ interface Props {
   }
   
 const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
-    //const [healthCheckRating, setHealthCheckRating] = useState(HealthCheckRating.Healthy);
-    //const [employerName, setEmployerName] = useState("");
-    const [existingSepcialists, setExistingSpecialists] = useState([""]);
-    const [specialist, setSpecialist] = useState(existingSepcialists[0]);
+    const [existingSepcialists, setExistingSpecialists] = useState<BaseEntry["specialist"][]>([""]);
+    const [specialist, setSpecialist] = useState<BaseEntry["specialist"]>("");
     const [date, setDate] = useState("today");
     const [description, setDescription] = useState("");
-    const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]|string>([])
-    const [treatmentCategory, setTreatmentCategory] = useState<Entry["treatment"]>(TreatmentCategory.Hospital)
+    const [existingDiagnoses, setExistingDiagnoses] = useState<Diagnosis[]>([]);
+    const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"]>("")
+    const [treatment, setTreatment] = useState<string>("")
 
     useEffect(() => {
         const fetchSpecialistList = async () => {
-         const specialists = await specialistListService.specialists();
-         setExistingSpecialists(specialists);
+            const specialists = await specialistListService.specialists();
+            setExistingSpecialists(specialists);
         }
         fetchSpecialistList();
+
+        const fetchDiagnoseList = async () => {
+            const diagnoses = await diagnosesService.allEntries() 
+            setExistingDiagnoses(diagnoses)
+          }
+          fetchDiagnoseList()
     }, []);
 
     const onTypeChange = (e:SelectChangeEvent<any>)=>{
         e.preventDefault();
         switch(e.target.value){
             case "Hospital": {
-                const value = e.target.value //const created to ensure prompt update
-                setTreatmentCategory(value);
+                const value = e.target.value 
+                setTreatment(value);
             } break;
             case "OccupationalHealthcare": {
-                const value = e.target.value //const created to ensure prompt update
-                setTreatmentCategory(value);
+                const value = e.target.value 
+                setTreatment(value);
             } break;
             case "HealthCheck": {
-                const value = e.target.value //const created to ensure prompt update
-                setTreatmentCategory(value);
+                const value = e.target.value 
+                setTreatment(value);
             }
         }
     }
@@ -56,37 +63,45 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
         })
     }
 
+    const onDiagnosisChange = (e:SelectChangeEvent<any>) => {
+        e.preventDefault();
+        const value = e.target.value;
+        existingDiagnoses.forEach(d => {
+            if(value === d["code"]) setDiagnosisCodes(value);
+        })
+    }
+
     const addEntry = (event: SyntheticEvent) => {
         event.preventDefault();
         onSubmit({
-          //   type,
           date,
           specialist,
           description,
-         // employerName,
          treatment: TreatmentCategory.Hospital,
-        // treatment: "Hospital",
         });
     };
 
+
+
     const OptionalEntryLines = () =>{
-        switch(treatmentCategory){
+        switch(treatment){
             case TreatmentCategory.Hospital: return (
                 <div>
                     <Grid container direction={"column"} spacing={.75}>
                         <Grid item>
-                            <TextField label="Diagnosis Code" 
-                            fullWidth 
-                            value={diagnosisCodes} 
-                            onChange={({target})=>setDiagnosisCodes(target.value)}
-                            /> 
-                        </Grid>
-                        <Grid item>
-                            <TextField label="Date of Discharge" 
-                            fullWidth 
-                            value={diagnosisCodes} 
-                            onChange={({target})=>setDiagnosisCodes(target.value)}
-                            /> 
+                            <FormControl fullWidth> 
+                                <InputLabel id="for-code-select">Select Diagnosis Code(s)</InputLabel>
+                                <Select 
+                                    labelId="for-code-select"
+                                    label="Select Diagnosis Code(s)"  
+                                    value={diagnosisCodes}                                  
+                                    onChange={onDiagnosisChange}
+                                >
+                                {existingDiagnoses.map((d,i) => (
+                                    <MenuItem key={i} value={d["code"]}> {d["code"] + ": "} {d["name"]}</MenuItem>
+                                ))}  
+                                </Select>
+                            </FormControl>
                         </Grid>
                     </Grid>
                 </div>
@@ -101,16 +116,16 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                 <Grid container direction={"column"} spacing={.75}>
                     <Grid item>
                         <FormControl fullWidth> 
-                            <InputLabel id="for-service-select">Select Service Type</InputLabel>
+                            <InputLabel id="for-service-select">Select a Service Type</InputLabel>
                             <Select  
                                 labelId="for-service-select"
-                                label="Select Service Type"
-                                value={treatmentCategory}
+                                label="Select a Service Type"
+                                value= {treatment}
                                 onChange={onTypeChange }
                             >
-                                <MenuItem value= {TreatmentCategory.Hospital}> Hospital Visit</MenuItem>
-                                <MenuItem value= {TreatmentCategory.OccupationalHealthcare}> Occupational Healthcare </MenuItem>
-                                <MenuItem value= {TreatmentCategory.HealthCheck}> Health Check </MenuItem>
+                                <MenuItem value="Hospital"> Hospital Visit</MenuItem>
+                                <MenuItem value="OccupationalHealthcare"> Occupational Healthcare </MenuItem>
+                                <MenuItem value="thCheck"> Health Check </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -120,10 +135,6 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                             value={date}
                             slotProps={{ textField: { fullWidth: true } }}
                             format="YYYY/MM/DD"
-                            //
-                            //
-                            //
-                            // @ts-ignore: Unreachable code error
                             onChange={(target)=>setDate(dayjs(target).toISOString().slice(0,10))}
                             />
                         </LocalizationProvider>                          
@@ -138,11 +149,11 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                     </Grid>
                     <Grid item>
                         <FormControl fullWidth > 
-                            <InputLabel id="for-specialist-select">Select Specialist</InputLabel>
+                            <InputLabel id="for-specialist-select">Select a Specialist</InputLabel>
                             <Select  
                                 labelId="for-specialist-select"
-                                label="Select Specialist"
-                                value={specialist}
+                                label="Select a Specialist"
+                                value= {specialist}
                                 onChange={onSpecialistChange}
                             >
                                 {existingSepcialists.map((s,i) => 
