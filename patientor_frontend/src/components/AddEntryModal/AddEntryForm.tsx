@@ -1,9 +1,13 @@
 import { useState, useEffect, SyntheticEvent } from "react";
-import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, FormControl } from '@mui/material';
+import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, FormControl, Box, InputAdornment} from '@mui/material';
 import dayjs from 'dayjs';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { BaseEntry, Entry, Diagnosis, TreatmentCategory } from "../../types";
 import specialistListService from "../../services/specialists";
 //import diagnosisCodesService from "../../services/diagnoses";
@@ -18,9 +22,11 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
     const [existingSepcialists, setExistingSpecialists] = useState<BaseEntry["specialist"][]>([""]);
     const [specialist, setSpecialist] = useState<BaseEntry["specialist"]>("");
     const [date, setDate] = useState("today");
+    const [dischargeDate, setDischargeDate] = useState("today")
     const [description, setDescription] = useState("");
     const [existingDiagnoses, setExistingDiagnoses] = useState<Diagnosis[]>([]);
-    const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"]>("")
+    const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([])
+    const [showCodes, setShowCodes] = useState(false)
     const [treatment, setTreatment] = useState<string>("")
 
     useEffect(() => {
@@ -58,17 +64,20 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
     const onSpecialistChange = (e:SelectChangeEvent<any>)=>{
         e.preventDefault();
         const value = e.target.value;
-        existingSepcialists.forEach(s => {
-            if(value === s) setSpecialist(value);
-        })
+        setSpecialist(value)
     }
 
     const onDiagnosisChange = (e:SelectChangeEvent<any>) => {
         e.preventDefault();
+        if(diagnosisCodes.length >= 0) setShowCodes(true);
         const value = e.target.value;
-        existingDiagnoses.forEach(d => {
-            if(value === d["code"]) setDiagnosisCodes(value);
-        })
+        const codes = diagnosisCodes.concat("  " + value)
+        setDiagnosisCodes(codes);
+    }
+
+    const undoDiagnosisCodes=()=>{
+        if(diagnosisCodes.length <= 1) setShowCodes(false);
+        setDiagnosisCodes(diagnosisCodes.slice(0,-1))
     }
 
     const addEntry = (event: SyntheticEvent) => {
@@ -81,20 +90,18 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
         });
     };
 
-
-
-    const OptionalEntryLines = () =>{
+    const AdditionalEntryLines = () =>{
         switch(treatment){
             case TreatmentCategory.Hospital: return (
-                <div>
-                    <Grid container direction={"column"} spacing={.75}>
+                <>
+                    <Grid container direction={"column"} spacing={1}>
                         <Grid item>
-                            <FormControl fullWidth> 
+                            <FormControl fullWidth size="small"> 
                                 <InputLabel id="for-code-select">Select Diagnosis Code(s)</InputLabel>
                                 <Select 
                                     labelId="for-code-select"
                                     label="Select Diagnosis Code(s)"  
-                                    value={diagnosisCodes}                                  
+                                    value=""   
                                     onChange={onDiagnosisChange}
                                 >
                                 {existingDiagnoses.map((d,i) => (
@@ -103,8 +110,128 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <Grid item>
+                            <Box
+                                sx={{ flexDirection: 'row' }}
+                            >
+                              {showCodes &&  <TextField 
+                                    variant="standard"
+                                    disabled 
+                                    fullWidth
+                                    size="small" 
+                                    value = {diagnosisCodes}
+                                    InputProps={{
+                                        disableUnderline: true,
+                                        startAdornment:
+                                            <InputAdornment position="end">
+                                                Code(s) Selected: 
+                                            </InputAdornment>,
+                                        endAdornment:  
+                                            <InputAdornment position="end">
+                                                <Button variant="outlined" color="inherit" size="small" 
+                                                onClick={undoDiagnosisCodes}
+                                                >UNDO</Button>
+                                            </InputAdornment>,
+                                    }}
+                                >
+                                </TextField>}
+                            </Box>
+                        </Grid>
+                        <Grid item>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                <DatePicker 
+                                value={dischargeDate}
+                                label="Select Discharge Date"  
+                                slotProps={{ textField: { fullWidth:true, size:"small"} }}
+                                format="YYYY/MM/DD"
+                                onChange={(target)=>setDischargeDate(dayjs(target).toISOString().slice(0,10))}
+                                />
+                            </LocalizationProvider>  
+                        </Grid>
                     </Grid>
-                </div>
+                </>
+            )
+            case TreatmentCategory.OccupationalHealthcare: return (
+                <>
+                    <Grid container direction={"column"}>
+                        <Grid item>
+                            <TextField 
+                                label="Employer Name"
+                                placeholder="Add Enployer Name"
+                                size="small"
+                                fullWidth
+                                sx={{marginBottom:1}}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormControl fullWidth size="small"> 
+                                <InputLabel id="for-code-select">Select Diagnosis Code(s) - Optional</InputLabel>
+                                <Select 
+                                    labelId="for-code-select"
+                                    label="Select Diagnosis Code(s)"  
+                                    value=""     
+                                    onChange={onDiagnosisChange}
+                                >
+                                {existingDiagnoses.map((d,i) => (
+                                    <MenuItem key={i} value={d["code"]}> {d["code"] + ": "} {d["name"]}</MenuItem>
+                                ))}  
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item>
+                              {showCodes &&  <TextField 
+                                    variant="standard"
+                                    disabled 
+                                    fullWidth
+                                    size="small" 
+                                    value = {diagnosisCodes}
+                                    InputProps={{
+                                        disableUnderline: true,
+                                        startAdornment:
+                                            <InputAdornment position="end">
+                                                Code(s) Selected: 
+                                            </InputAdornment>,
+                                        endAdornment:  
+                                            <InputAdornment position="end">
+                                                <Button variant="outlined" color="inherit" size="small" 
+                                                onClick={undoDiagnosisCodes}
+                                                >UNDO</Button>
+                                            </InputAdornment>,
+                                    }}
+                                >
+                                </TextField>}
+                        </Grid>
+                        <Grid item>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['SingleInputDateRangeField']}>
+                                    <DateRangePicker 
+                                        slots={{ field: SingleInputDateRangeField }} 
+                                        slotProps={{ textField: { fullWidth:true, size:"small"} }}
+                                        label="Select Sick Leave Period (From - To) - Optional"
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                        </Grid>
+                    </Grid>
+                </>
+            )
+            case TreatmentCategory.HealthCheck: return(
+                <>
+                    <FormControl fullWidth size="small"> 
+                        <InputLabel id="health-rating-select" >Select Health Rating</InputLabel>
+                        <Select 
+                            labelId="health-rating-select"
+                            label="Select Health Rating"  
+                            value=""     
+                            onChange={onDiagnosisChange}
+                        >
+                        {existingDiagnoses.map((d,i) => (
+                            <MenuItem key={i} value={d["code"]}> {d["code"] + ": "} {d["name"]}</MenuItem>
+                        ))}  
+                        </Select>
+                    </FormControl>
+                </>
+ 
             )
             default: return null
         }
@@ -113,19 +240,20 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
     return (
         <div>
             <form onSubmit = {addEntry}>
-                <Grid container direction={"column"} spacing={.75}>
+                <Grid container direction={"column"} spacing={1.5}>
                     <Grid item>
-                        <FormControl fullWidth> 
+                        <FormControl fullWidth size="small"> 
                             <InputLabel id="for-service-select">Select a Service Type</InputLabel>
                             <Select  
                                 labelId="for-service-select"
                                 label="Select a Service Type"
                                 value= {treatment}
                                 onChange={onTypeChange }
+                                size="small" 
                             >
                                 <MenuItem value="Hospital"> Hospital Visit</MenuItem>
                                 <MenuItem value="OccupationalHealthcare"> Occupational Healthcare </MenuItem>
-                                <MenuItem value="thCheck"> Health Check </MenuItem>
+                                <MenuItem value="HealthCheck"> Health Check </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -133,22 +261,25 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                         <LocalizationProvider dateAdapter={AdapterDayjs} >
                             <DatePicker 
                             value={date}
-                            slotProps={{ textField: { fullWidth: true } }}
+                            label="Select Etry Date"
+                            slotProps={{ textField:{fullWidth:true, size:"small"} }}
                             format="YYYY/MM/DD"
                             onChange={(target)=>setDate(dayjs(target).toISOString().slice(0,10))}
                             />
                         </LocalizationProvider>                          
                     </Grid>
                     <Grid item>
-                        <TextField label="Description" 
+                        <TextField 
+                            label="Description" 
                             placeholder="add descrption/comments"
                             fullWidth 
+                            size="small" 
                             value={description} 
                             onChange={({target})=>setDescription(target.value)}
                         />
                     </Grid>
                     <Grid item>
-                        <FormControl fullWidth > 
+                        <FormControl fullWidth size="small"> 
                             <InputLabel id="for-specialist-select">Select a Specialist</InputLabel>
                             <Select  
                                 labelId="for-specialist-select"
@@ -163,7 +294,7 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <OptionalEntryLines/>
+                        <AdditionalEntryLines/>
                     </Grid>
                 </Grid> 
                 <Grid>
@@ -171,7 +302,7 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                         <Button
                             color="secondary"
                             variant="contained"
-                            style={{ float: "left" }}
+                            style={{ float:"left", marginTop:"1rem"}}
                             type="button"
                             onClick={onCancel}
                             >
@@ -180,7 +311,7 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) =>{
                     </Grid>
                     <Grid item>
                         <Button
-                            style={{float: "right",}}
+                            style={{float:"right", marginTop:"1rem"}}
                             type="submit"
                             variant="contained"
                         >
