@@ -36,9 +36,9 @@ export const HealithinessBar = (rating:number|any) => {
 
 export const CareTypeIcon=(careType:string)=>{
     switch(careType){
-        case TreatmentCategory.Hospital: return <LocalHospitalIcon style={{color: 'red', paddingRight: "0.5rem"}}/>
-        case TreatmentCategory.OccupationalHealthcare: return <BadgeIcon style={{color: 'blue', paddingRight: "0.5rem"}}/>
-        case TreatmentCategory.HealthCheck: return <NoteAltIcon style={{color: 'orange', paddingRight: "0.5rem"}}/>
+        case TreatmentCategory.Hospital: return <LocalHospitalIcon style={{color: 'red', paddingRight: "0.5rem"}} fontSize="large"/>
+        case TreatmentCategory.OccupationalHealthcare: return <BadgeIcon style={{color: 'blue', paddingRight: "0.5rem"}} fontSize="large"/>
+        case TreatmentCategory.HealthCheck: return <NoteAltIcon style={{color: 'orange', paddingRight: "0.5rem"}} fontSize="large"/>
 
         default: return <HelpCenterIcon style={{color: 'grey', paddingRight: "0.5rem"}}/>
     }
