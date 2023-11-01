@@ -26,15 +26,6 @@ export interface Patient{
     occupation: string;
     entries?: Entry[]
 }
- 
-export interface PatientEntry{
-    id: string;
-    name: string;
-    dateOfBirth: string;
-    ssn: string;
-    gender: Gender;
-    occupation: string
-}
 
 export interface Diagnosis{
     code: string;
@@ -46,7 +37,7 @@ type OptionalKeys <T, K extends keyof T > = T extends unknown? Omit<T , K> : nev
 export type DiagnosisLatinAsOption = OptionalKeys<Diagnosis, 'latin'>;
 
 export interface BaseEntry {
-    id: string;
+    id?: string;
     date: string;
     specialist: string;
     description: string;    

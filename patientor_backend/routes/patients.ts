@@ -20,6 +20,7 @@ try{
   const screenedPatientEntry = toNewPatientEntry(req.body);
     const fullPatientEntryWithId= patientService.addPatient(screenedPatientEntry);
     res.json(fullPatientEntryWithId);
+    console.log("backend/routes/patients.ts/post: posting new patient success")
     }catch (err:unknown){
         let errorMessage = 'something is wrong (backend>routes>patients). ';
         if (err instanceof Error){

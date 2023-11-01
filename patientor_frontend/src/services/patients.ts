@@ -4,14 +4,14 @@ import {Patient, PatientFormValues} from "../types"
 import { apiBaseUrl } from '../constants';
 
 const getAll = async()=>{
-  //3001/api/patients
     const{data} = await axios.get<Patient[]>(`${apiBaseUrl}/patients`)
     return data
 }
 
 const create = async (object: PatientFormValues) => {
-        //3001/api/patients
     const { data } = await axios.post<Patient>( `${apiBaseUrl}/patients`, object );
+    console.log("frontend>services>createuser>object: ", object)
+    console.log("frontend>services>createuser>data: ", data)
     return data;
 };
 
