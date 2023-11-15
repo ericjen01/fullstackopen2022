@@ -1,5 +1,5 @@
 import { Diagnosis } from "../types";
-import {toNewDiagnosesEntry} from "../utils";
+import {toNewDiagnosesInput} from "../utils";
 
 const data: Diagnosis[] =  [
   {
@@ -80,17 +80,17 @@ const data: Diagnosis[] =  [
 ];
 
 export const allDiagonses: Diagnosis[] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj) ;
+  const object = toNewDiagnosesInput(obj) ;
   return object;
 });
 
 export const nonLatinEntries: Diagnosis[] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj);
+  const object = toNewDiagnosesInput(obj);
   return object;
 });
 
 export const diagnosisCodes: Diagnosis["code"][] = data.map(obj=>{
-  const object = toNewDiagnosesEntry(obj).code;
+  const object = toNewDiagnosesInput(obj).code;
   return object;
 });
 

@@ -1,6 +1,6 @@
 import { Diagnosis, Entry, Patient } from "../../types";
-import{useState, useEffect} from 'react'
-import { Button } from '@mui/material';
+import {useState, useEffect} from 'react'
+import { Button, Divider } from '@mui/material';
 import { useParams } from "react-router-dom";
 import { GenIcon } from "../IconPack";
 import patientInfoService from "../../services/patientInfo"
@@ -15,14 +15,12 @@ interface Props {
   }
 
 const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
-
     const [patientInfo, setPatientInfo] = useState<Patient>(Object)
-    const params = useParams() //returns "{id: 'xxx-xxx-...'}"
-    const patientId = params.id; //returns id in string form
+    const params = useParams() 
+    const patientId = params.id; 
     const [entries, setEntries] = useState<Entry[]>([])
     const [error, setError] = useState<string>();
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
     const openModal = (): void => setModalOpen(true);
     const closeModal = (): void => {
         setModalOpen(false);
@@ -31,9 +29,9 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
 
     useEffect(() => {
         const fetchPatientInfo = async ()=>{
-            const patientInfo = await patientInfoService.getAll(patientId)
+            const patientInfo = await patientInfoService.getInfo(patientId)
             setPatientInfo(patientInfo)
-            setEntries(patientInfo.entries!) //Non-null assertion operator
+            setEntries(patientInfo.entries!)
         }
         fetchPatientInfo()
     }, [patientId]);
@@ -43,6 +41,7 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
             const newEntry = await patientInfoService.create(values, patientInfo.id );
             setEntries(entries.concat(newEntry));
             setModalOpen(false);
+            setError(undefined);
         }catch (e:unknown){
             if (axios.isAxiosError(e)) {
                 if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -59,11 +58,11 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
         }
     }
     
-    const patientTreatmentHistory =()=>{
-        if(entries){
-            return (
+    const patientTreatmentHistory =()=>(
+        (!entries)?(<h3>No Treatment History</h3>):
+             (
             <div>
-                <h3>Entries</h3>
+               <h3>Patient History</h3>
                 {Object.values(entries).map((e:Entry)=>{
                    return (
                     <div key={e.id}>
@@ -74,15 +73,15 @@ const PatientInfoPage = ({ patients, setPatients, diagnoses }: Props) => {
                 }
             </div>
             )
-        }
-    }
-    
+        
+    )  
     return (
         <div className="container">
             <h2>Clinical Profile</h2>
-            <h2>{patientInfo?.name}, {patientInfo?.gender} {GenIcon(patientInfo)}</h2>
-            <span>SSN: {patientInfo?.ssn}</span>
-            <span><br/>Occupation: {patientInfo?.occupation}<br/></span>
+            <h2>{patientInfo.name}, {patientInfo.gender} {GenIcon(patientInfo)}</h2>
+            <span>SSN: {patientInfo.ssn}</span>
+            <span><br/>Occupation: {patientInfo?.occupation}<br/></span><br/>
+            <Divider/> 
             {patientTreatmentHistory()}
             <AddEntryModal
                 modalOpen={modalOpen}

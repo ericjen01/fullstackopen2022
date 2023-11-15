@@ -11,7 +11,6 @@ router.get("/simple",(_req,res)=>{
 
 // 30001/api/diagnoses + /all
 router.get("/all", (_req,res)=>{
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     res.send(JSON.stringify(diagnosesService.getAllDiagnoses() as Diagnosis[]));
 });
 

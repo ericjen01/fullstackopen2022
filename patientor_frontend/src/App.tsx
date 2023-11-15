@@ -53,10 +53,10 @@ const App =()=>{
         <Typography variant="h3" style = {{ marginBottom: "0.5em" }}>
           Patientor
         </Typography>
-        <Button component={Link} to = "/" variant = "contained" color = "primary">
+        <Button style={{marginBottom:"1rem"}} component={Link} to = "/" variant = "contained" color = "primary">
           Home
         </Button> 
-        <Divider hidden />
+        <Divider/>
         <Routes>
           <Route path = "/" element = {<PatientListPage patients = {patients} setPatients={setPatients}/>} />
           <Route path = "/diagnoses/all" element = {<DiagnosisListPage diagnoses = {diagnoses}/>}/>

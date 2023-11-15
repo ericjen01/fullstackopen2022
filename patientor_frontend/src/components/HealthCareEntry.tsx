@@ -24,15 +24,21 @@ const HealthCareEntry = (entry:Entry, diagnoses:Diagnosis[]) =>{
     )
 
     const DoctorInCharge = () => (
-        <div> diagnose by {entry.specialist} </div>
+        <div style={{marginTop:"1rem"}}> diagnose by {entry.specialist} </div>
     )
-
+    
     const Employer = () => (
-        <div> Employer Name: {entry.employerName} </div>
+        ("employerName" in entry)? 
+        (<div style={{marginTop:"1rem"}}> Employer Name: {entry.employerName} </div>)
+        : 
+        null
     )
 
     const HealthRating = () =>(
-        <div> Health Check Rating: {HealithinessBar(entry.healthCheckRating)} </div>
+        ("healthCheckRating" in entry)? 
+        (<div style={{display:"inline-flex", justifyContent:"center"}}> Health Check Rating: {HealithinessBar(entry.healthCheckRating)} </div>)
+        :
+        null
     )
 
     const DiagDetail =(diagCode:string)=>{
@@ -42,77 +48,59 @@ const HealthCareEntry = (entry:Entry, diagnoses:Diagnosis[]) =>{
 
     const Diagnoses = (obj: { [s: string]: Entry }) => {
         const entry = Object.values(obj)[0]
-        if(entry.diagnosisCodes){
-            return(
-                <div style={{paddingTop: "1rem", display: "inline-block"}}>
-                    <span>Diagnose Detail: <br/></span>
-                    <ul>
-                        {entry.diagnosisCodes?.map((diagCode,i) =>
-                        <li key={i}> {diagCode} {DiagDetail(diagCode)}</li>
-                        )}
-                    </ul>
-                </div>
-            )
-        }return null
+        return(
+            (entry.diagnosisCodes)
+            ?
+            (<div style={{paddingTop: "1rem", display: "inline-block"}}>
+                <span>Diagnose Detail: <br/></span>
+                <ul>
+                    {entry.diagnosisCodes?.map((diagCode,i) =>
+                    <li key={i}> {diagCode} {DiagDetail(diagCode)}</li>
+                    )}
+                </ul>
+            </div>)
+            :
+            null
+        )
     }
 
     const Discharge = (obj: { [s: string]: HospitalEntry }) => {
         const entry = Object.values(obj)[0]
-        if(entry.discharge){
-             return (
-                <div>
-                    <span>Discharged on: {entry.discharge.date} <br/></span>
-                    <span >Criteria: {entry.discharge.criteria}<br/></span>
-                </div>
-             ) 
-        }return null;
+        return(
+            (entry.discharge)
+            ?
+            (<div>
+                <span>Discharged on: {entry.discharge.date} <br/></span>
+                <span >Criteria: {entry.discharge.criteria}<br/></span>
+            </div>)
+            :
+            null
+        )
     };
 
-    const HospitalEntry = () =>{
-        return (
-            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
-                <EntryDate/>
+    return(
+        <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'.8rem', margin:".4rem", borderRadius:".5rem",}}>
+            <EntryDate/>
+            {entry.treatment==="Hospital" && <>
                 <HospitalVisit/>
                 <ReasonForVisit/>
                 <Diagnoses obj = {entry}/>
-                <Discharge obj = {entry as HospitalEntry} /><br/>
-                <DoctorInCharge/>
-            </div> 
-        )     
-    }
-
-    const OccupationalHealthcareEntry = () =>{
-        return (
-            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
-                <EntryDate/>
+                <Discharge obj = {entry as HospitalEntry} />
+            </>}
+            {entry.treatment==="OccupationalHealthcare" && <>
                 <OccupationalHealthcare/>
-                <Employer/>
                 <ReasonForVisit/>
-                <Diagnoses obj = {entry}/><br/>
-                <DoctorInCharge/>
-            </div>  
-        )     
-    }
-    const HealthCheckEntry = () =>{
-        return (
-            <div style={{border: '1px solid rgba(0, 0, 0, 0.5)', padding:'0.8rem', margin:"0.4rem"}}>
-                <EntryDate/>
-                <HealthCheck/>
                 <Employer/>
+                <Diagnoses obj = {entry}/><br/>
+                </>}
+            {entry.treatment==="HealthCheck" && <>
+                <HealthCheck/>
                 <ReasonForVisit/>
                 <HealthRating/>
-                <Diagnoses obj = {entry}/><br/>
-                <DoctorInCharge/>
-            </div>  
-        )     
-    }
-
-    switch(entry.treatment){
-        case entry.treatment=TreatmentCategory.Hospital: return <HospitalEntry/>;
-        case entry.treatment=TreatmentCategory.OccupationalHealthcare: return <OccupationalHealthcareEntry/>;
-        case entry.treatment=TreatmentCategory.HealthCheck: return <HealthCheckEntry/>;
-        default: return null;
-    }
+            </>}
+            <DoctorInCharge/>
+        </div>
+    )
 }
 export default HealthCareEntry;
 

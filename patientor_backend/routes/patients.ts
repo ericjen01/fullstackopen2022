@@ -1,6 +1,6 @@
 import express from 'express';
 import patientService from "../services/patientsService";
-import { toNewPatientEntry } from '../utils';
+import { toNewPatientInput } from '../utils';
 
 const router = express.Router();
 
@@ -11,16 +11,14 @@ router.get('/', (_req,res)=>{
 
 router.get('/:id', (req,res)=>{
     const reqstedId = req.params.id;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     res.send(JSON.stringify(patientService.patientById(reqstedId)));
 });
 
 router.post("/",(req,res)=>{ 
 try{
-  const screenedPatientEntry = toNewPatientEntry(req.body);
-    const fullPatientEntryWithId= patientService.addPatient(screenedPatientEntry);
-    res.json(fullPatientEntryWithId);
-    console.log("backend/routes/patients.ts/post: posting new patient success")
+  const screenedPatientInput = toNewPatientInput(req.body);
+    const fullPatientInputWithId= patientService.addPatient(screenedPatientInput);
+    res.json(fullPatientInputWithId);
     }catch (err:unknown){
         let errorMessage = 'something is wrong (backend>routes>patients). ';
         if (err instanceof Error){

@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, Divider, Alert } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Alert } from '@mui/material';
 import AddPatientForm from "./AddPatientForm";
 import { PatientFormValues } from "../../types";
 
@@ -11,11 +11,10 @@ interface Props {
 
 const AddPatientModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
-    <DialogTitle>Add a new patient</DialogTitle>
-    <Divider />
+    <DialogTitle sx={{mb:-0.5}}>Add a New Patient</DialogTitle>
     <DialogContent>
-      {error && <Alert severity="error">{error}</Alert>}
-      <AddPatientForm onSubmit={onSubmit} onCancel={onClose}/>
+      {error && <Alert severity="error" sx={{mb:1, mt:-1}}>Please complete all required fields</Alert>}
+      <AddPatientForm onSubmit={onSubmit} onCancel={onClose} error={error}/>
     </DialogContent>
   </Dialog>
 );

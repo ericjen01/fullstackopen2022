@@ -1,11 +1,16 @@
 
 import { useState, SyntheticEvent } from "react";
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
+import {  TextField, InputLabel, MenuItem, Select, Grid, Button, FormControl } from '@mui/material';
 import { PatientFormValues, Gender } from "../../types";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { MobileDatePicker } from "@mui/x-date-pickers";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: PatientFormValues) => void;
+  error: string|undefined;
 }
 
 interface GenderOption{
@@ -17,23 +22,12 @@ const genderOptions: GenderOption[] = Object.values(Gender).map(v => ({
   value: v, label: v.toString()
 }));
 
-const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
+const AddPatientForm = ({ onCancel, onSubmit, error }: Props) => {
   const [name, setName] = useState('');
   const [occupation, setOccupation] = useState('');
   const [ssn, setSsn] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
-  const [gender, setGender] = useState(Gender.Other);
-
-  const onGenderChange = (event: SelectChangeEvent<string>) => {
-    event.preventDefault();
-    if ( typeof event.target.value === "string") {
-      const value = event.target.value;
-      const gender = Object.values(Gender).find(g => g.toString() === value);
-      if (gender) {
-        setGender(gender);
-      }
-    }
-  };
+  const [gender, setGender] = useState(''as Gender);
 
   const addPatient = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -46,52 +40,69 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
     });
   };
 
+  const isValidInput = (input: any, itemName: string, message="") =>(
+    (typeof error !== "undefined" && input.length<=2)
+    ? (String.fromCharCode(0x26A0) + itemName + message)
+    : itemName
+  )
+ 
   return (
     <div>
       <form onSubmit={addPatient}>
-        <TextField
-          label="Name"
-          fullWidth 
-          value={name}
-          onChange={({ target }) => setName(target.value)}
-        />
-        <TextField
-          label="Social security number"
-          fullWidth
-          value={ssn}
-          onChange={({ target }) => setSsn(target.value)}
-        />
-        <TextField
-          label="Date of birth"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={dateOfBirth}
-          onChange={({ target }) => setDateOfBirth(target.value)}
-        />
-        <TextField
-          label="Occupation"
-          fullWidth
-          value={occupation}
-          onChange={({ target }) => setOccupation(target.value)}
-        />
-
-        <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
-        <Select
-          label="Gender"
-          fullWidth
-          value={gender}
-          onChange={onGenderChange}
-        >
-        {genderOptions.map(option =>
-          <MenuItem
-            key={option.label}
-            value={option.value}
-          >
-            {option.label
-          }</MenuItem>
-        )}
-        </Select>
-
+        <Grid container direction={"column"} spacing={1} mb={2} mt={.25}>
+          <Grid item>
+            <TextField
+            label={isValidInput(name, " Patient Name", "- min. 3 characters")}
+            fullWidth
+            size="small" 
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+            />
+          </Grid>
+          <Grid item>
+          <TextField
+            label={isValidInput(ssn, " Social Security Number", "- required")}
+            fullWidth
+            size="small" 
+            value={ssn}
+            onChange={({ target }) => setSsn(target.value)}
+            />                              
+          </Grid>
+          <Grid item>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileDatePicker
+                label={isValidInput(dateOfBirth, " Select Date of Birth")}
+                slotProps={{ textField: { fullWidth:true, size:"small",} }}
+                format="YYYY/MM/DD"
+                value={null}
+                onChange={(target)=>setDateOfBirth(dayjs(target).toISOString().slice(0,10))}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item>
+            <TextField
+            label={isValidInput(occupation, " Occupation", "- min. 3 characters")}
+            fullWidth
+            size="small" 
+            value={occupation}
+            onChange={({ target }) => setOccupation(target.value)}
+            />
+          </Grid>
+          <Grid item>
+            <FormControl fullWidth size='small'>       
+              <InputLabel>{isValidInput(gender, " Select Gender")}</InputLabel>
+                <Select
+                  label={isValidInput(gender.toString(), " Select Gender")}
+                  value= {gender}
+                  onChange={({target})=>setGender(target.value as Gender)}
+                >
+                  {genderOptions.map((option) => 
+                    <MenuItem key={option.label} value={option.value}> {option.label }</MenuItem>
+                  )}
+                </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
         <Grid>
           <Grid item>
             <Button

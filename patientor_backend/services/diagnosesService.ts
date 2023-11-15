@@ -5,7 +5,6 @@ const getAllDiagnoses = (): Diagnosis[]=>{
     return allDiagonses;
 };
 const getNonLatinEntries = (): Diagnosis[]=>{
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return nonLatinEntries; 
 };
 

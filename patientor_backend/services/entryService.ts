@@ -2,9 +2,8 @@ import { data_patients } from "../data/patientEntries";
 import { Entry } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 
-
 const entriesByPatientId = (reqstedId:string) => {
-    const patientById = data_patients.filter(p=>p.id===reqstedId);
+    const patientById = data_patients.filter(p=>p["id"]===reqstedId);
     const currentEntries = patientById.map(e=>{
         return e.entries;
     });
@@ -12,7 +11,6 @@ const entriesByPatientId = (reqstedId:string) => {
 };
 
 const addNewTreatmentId =(entry:Entry):Entry=>{
-    console.log("backend>entryservice>addnewtreatmentid> new treatment entry, should be no id: ", entry)
     const newTreatmentEntry= {
         id: uuidv4(),
         ...entry    };

@@ -26,6 +26,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
       const patient = await patientService.create(values); 
       setPatients(patients.concat(patient));
       setModalOpen(false);
+      setError(undefined);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -45,14 +46,13 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
   const navigate = useNavigate();
   const routeToPatient = (patientId:string) =>{
   const path = `patients/${patientId}`;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   navigate(path);
  }
 
   return (
     <div className="App">
       <Box>
-        <Typography align="center" variant="h6">
+        <Typography align="left" variant="h6">
           Patient list
         </Typography>
       </Box>

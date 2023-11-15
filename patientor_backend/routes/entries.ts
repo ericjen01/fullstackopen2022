@@ -1,5 +1,6 @@
 import express from 'express';
 import treatmentService from '../services/entryService';
+import { toNewTreatmentEntry } from '../utils';
 
 const router = express.Router();
 router.get("/:id/entries", (req,res)=>{
@@ -9,16 +10,13 @@ router.get("/:id/entries", (req,res)=>{
 
 router.post("/:id/entries", (req,res)=>{
     try{
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const newEntry = req.body;
-        const newEntryWithId = treatmentService.addNewTreatmentId(newEntry)
+        const screenednNewEntry = toNewTreatmentEntry(req.body);
+        const newEntryWithId = treatmentService.addNewTreatmentId(screenednNewEntry)
         res.json(newEntryWithId);
-        console.log("backend/routes/post/entries>entry success. without id: ", newEntry)
-        console.log("backend/routes/post/entries>entry success. with id: ", newEntryWithId)
     }catch(err:unknown){
-        let errorMessage = 'something is wrong (backend>routes>patients). ';
+        let errorMessage = 'Error Message: (backend>routes>patients). ';
         if (err instanceof Error){
-            errorMessage += 'Error: ' + err.message;
+            errorMessage +=  err.message;
         }res.status(400).send(errorMessage);
     }
 });

@@ -25,7 +25,7 @@ export interface Patient{
     gender: keyof typeof Gender;
     occupation: string;
     entries?: Entry[]
-}
+} 
 
 export interface Diagnosis{
     code: string;
@@ -58,7 +58,6 @@ export interface OccupationalHealthcareEntry extends BaseEntry{
 export interface HealthCheckEntry extends BaseEntry{
     treatment: keyof typeof TreatmentCategory;
     healthCheckRating?: HealthCheckRating;
-    employerName?: string;
 }
 
 export interface Discharge {

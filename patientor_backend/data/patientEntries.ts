@@ -1,5 +1,5 @@
 import  {Gender, Patient }  from '../types';
-import {toNewPatientEntry, toFullPatientEntry}  from '../utils';
+import {toNewPatientInput, toFullPatientInput}  from '../utils';
 
 const patients: Patient[] = [
   {
@@ -42,7 +42,15 @@ const patients: Patient[] = [
         treatment: 'HealthCheck',
         specialist: 'FSO Coder',
         description: 'Yearly control visit. Minor increased blood pressure.',
-        healthCheckRating: 2,
+        healthCheckRating: 1,
+      },
+      {
+        id: 'b4f3ebq1-2aa7-4b13-9a18-4a5535c3c8da',
+        date: '2018-05-29',
+        treatment: 'HealthCheck',
+        specialist: 'FSO Coder',
+        description: 'Yearly control visit. Good Health Condition',
+        healthCheckRating: 0,
       },
     ],
   },
@@ -163,10 +171,10 @@ const genderValidation = (param:string):param is Gender=>{
 genderValidation("male");
 
 export const data_patients:Patient[] = patients.map(obj=>{
-  const object = toFullPatientEntry(obj) ;
+  const object = toFullPatientInput(obj) ;
   return object;
 });
 export const data_updatedPatientList:Patient[] = patients.map(obj=>{
-  const object =toNewPatientEntry(obj) ;
+  const object = toNewPatientInput(obj) ;
   return object;
 });
